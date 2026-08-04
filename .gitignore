@@ -43,7 +43,15 @@ neo4j/import/
 # IDE
 .vscode/
 .idea/
-.claude/
+# .claude/ contents stay local, with one exception: settings.json is hook-capable,
+# so a hostile edit or a newly planted file must surface as a git diff or an
+# untracked file rather than silently. This is the ChainDrop/Shai-Hulud worm
+# vector (a payload wired into .claude/settings.json that runs on session start).
+# The pattern must be `.claude/*`, not `.claude/`: git cannot re-include a path
+# whose parent directory is excluded, so a directory-level ignore would defeat
+# the negation below.
+.claude/*
+!.claude/settings.json
 .codex/
 *.swp
 *.swo
