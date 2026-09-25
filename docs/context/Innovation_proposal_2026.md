@@ -218,7 +218,7 @@ What didn't: Answers were fragmented because each MCP server returned flat resul
 
 Lesson: Getting the data is not the hard part. NCBI already knows how entities connect across databases. MCP works well for wrapping individual databases, but what's missing is a unified layer that makes those relationships queryable.
 
-> [Recording](https://share.descript.com/view/uXjS7imhDar) | [Repository (main branch)](https://gitlab.be-md.ncbi.nlm.nih.gov/chakrabortim2/ncbi_ai_agents/-/tree/main?ref_type=heads)
+> [Recording](https://share.descript.com/view/uXjS7imhDar) | Repository (main branch): an internal repository
 
 ### Experiment 2: in-memory KG
 
@@ -230,7 +230,7 @@ What didn't: The graph was small and the connections were inferred from search r
 
 Lesson: Relationships are the key to better answers. But they need to be built on real standards, not inferred.
 
-> [Recording](https://share.descript.com/view/yIjSzZEV9lK) | [Repository (knowledge-graphs branch)](https://gitlab.be-md.ncbi.nlm.nih.gov/chakrabortim2/ncbi_ai_agents/-/tree/knowledge-graphs?ref_type=heads)
+> [Recording](https://share.descript.com/view/yIjSzZEV9lK) | Repository (knowledge-graphs branch): an internal repository
 
 ### Lessons from the NLM/NCBI KG PoC
 
@@ -242,7 +242,7 @@ In parallel, we built a PoC for the NLM initiative as part of the NLM/NCBI KG te
 
 These are the engineering foundations we will apply to the agentic search system.
 
-> [Repository (ncbi-kg branch)](https://gitlab.be-md.ncbi.nlm.nih.gov/chakrabortim2/ncbi_ai_agents/-/tree/ncbi-kg?ref_type=heads) | [Live application](https://ncbi-kg-frontend-production.up.railway.app/)
+> Repository (ncbi-kg branch): an internal repository | [Live application](https://ncbi-kg-frontend-production.up.railway.app/)
 
 ### Already validated (from the NLM/NCBI KG PoC)
 
@@ -269,9 +269,9 @@ These patterns and tools have been proven in the parallel NLM/NCBI KG project an
 | Item | Link |
 |------|------|
 | Experiment 1: MCP orchestrator recording | [Recording](https://share.descript.com/view/uXjS7imhDar) |
-| Experiment 1: repository (main branch) | [GitLab](https://gitlab.be-md.ncbi.nlm.nih.gov/chakrabortim2/ncbi_ai_agents/-/tree/main?ref_type=heads) |
+| Experiment 1: repository (main branch) | an internal repository |
 | Experiment 2: in-memory KG recording | [Recording](https://share.descript.com/view/yIjSzZEV9lK) |
-| Experiment 2: repository (knowledge-graphs branch) | [GitLab](https://gitlab.be-md.ncbi.nlm.nih.gov/chakrabortim2/ncbi_ai_agents/-/tree/knowledge-graphs?ref_type=heads) |
-| NLM/NCBI KG PoC: repository (ncbi-kg branch) | [GitLab](https://gitlab.be-md.ncbi.nlm.nih.gov/chakrabortim2/ncbi_ai_agents/-/tree/ncbi-kg?ref_type=heads) |
+| Experiment 2: repository (knowledge-graphs branch) | an internal repository |
+| NLM/NCBI KG PoC: repository (ncbi-kg branch) | an internal repository |
 | NLM/NCBI KG PoC: live application | [Live app](https://ncbi-kg-frontend-production.up.railway.app/) |
 | NLM/NCBI KG PoC: integrations | [Integrations](https://ncbi-kg-frontend-production.up.railway.app/integrations) |

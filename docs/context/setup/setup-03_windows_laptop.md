@@ -21,14 +21,14 @@ See `DECISIONS.md` (2026-04-16 entry) for the rationale.
 ## Current state on the server (what you are migrating from)
 
 ```
-/home/chakrabortim2/agentic-search-data-engineering/     <- repo (on NFS home)
-  |-- data -> /export/home/chakrabortim2/data            <- symlink
+/home/<you>/agentic-search-data-engineering/     <- repo (on NFS home)
+  |-- data -> /export/home/<you>/data            <- symlink
   |-- .env                                               <- gitignored, has API key
   |-- env.example                                        <- checked in template
-  |-- reference-repos/ncbi_ai_agents -> /home/chakrabortim2/ncbi_ai_agents
-  |-- reference-repos/personal-os -> /home/chakrabortim2/personal-os-work
+  |-- reference-repos/ncbi_ai_agents -> /home/<you>/ncbi_ai_agents
+  |-- reference-repos/personal-os -> /home/<you>/personal-os-work    <!-- local-refs: allow (public sibling repo name) -->
 
-/export/home/chakrabortim2/data/
+/export/home/<you>/data/
   |-- ftp_cache/   5.0 GB   raw NCBI FTP downloads (skip re-downloads)
   |-- kgx/        46 GB     Gate 1 KGX output (Gene + ClinVar + MedGen)
   |-- raw/         empty
@@ -110,7 +110,7 @@ The `.env` file is gitignored (see `.gitignore:9`). You have two options:
 Option A: pull the current `.env` from the server via scp:
 
 ```bash
-scp chakrabortim2@<SERVER>:/home/chakrabortim2/agentic-search-data-engineering/.env .
+scp <you>@<SERVER>:/home/<you>/agentic-search-data-engineering/.env .
 ```
 
 Then edit the paths for Windows.
@@ -183,15 +183,15 @@ All four must pass before proceeding to Step 7.
 
 ```bash
 # SSH to the server
-ssh chakrabortim2@<SERVER>
+ssh <you>@<SERVER>
 
 # Delete the data (keep the parent dir so the symlink target is still valid)
-rm -rf /export/home/chakrabortim2/data/kgx
-rm -rf /export/home/chakrabortim2/data/ftp_cache
-rm -rf /export/home/chakrabortim2/data/raw
+rm -rf /export/home/<you>/data/kgx
+rm -rf /export/home/<you>/data/ftp_cache
+rm -rf /export/home/<you>/data/raw
 
 # Optional: delete the repo clone on server if you are not coming back
-# rm -rf /home/chakrabortim2/agentic-search-data-engineering
+# rm -rf /home/<you>/agentic-search-data-engineering
 ```
 
 You can keep the server repo clone as a fallback SSH dev environment. It costs ~50 MB on `/home` (NFS) and nothing on `/export`.

@@ -12,7 +12,7 @@ Stack: Python 3.11+, LinkML, BioLink 4.x, KGX, PostgreSQL 15 + Apache AGE.
 
 | Priority | System | Status |
 |----------|--------|--------|
-| 1 | System 1: data pipelines | V1 COMPLETE (2026-04-22). Phase 4.0 + Gate 3 PASSED. 5-database AGE graph live on Hetzner CPX42 (46.225.128.133): 115,406,761 nodes + 693,295,991 edges across 11 vertex labels and 14 edge labels. All 7 Cypher smoke queries pass (Q1 BRCA1 224ms, Q2 PKU 6ms, Q3 glucose 28ms, Q4 TP53 26s most-cited gene, Q5 taxon 14ms, Q6 16s full count, Q7 24ms). Loader's `index_builder.py` updated to do all four index passes (functional B-tree + graphid PK + GIN + edge-endpoint B-tree) plus ANALYZE automatically as Steps 7-8. Postgres tuned for 16 GB box. See `docs/Knowledge_graph_on_server_reference.md` for the live-graph A-Z reference. |
+| 1 | System 1: data pipelines | V1 COMPLETE (2026-04-22). Phase 4.0 + Gate 3 PASSED. 5-database AGE graph live on Hetzner CPX42 (<server-ip>): 115,406,761 nodes + 693,295,991 edges across 11 vertex labels and 14 edge labels. All 7 Cypher smoke queries pass (Q1 BRCA1 224ms, Q2 PKU 6ms, Q3 glucose 28ms, Q4 TP53 26s most-cited gene, Q5 taxon 14ms, Q6 16s full count, Q7 24ms). Loader's `index_builder.py` updated to do all four index passes (functional B-tree + graphid PK + GIN + edge-endpoint B-tree) plus ANALYZE automatically as Steps 7-8. Postgres tuned for 16 GB box. See `docs/Knowledge_graph_on_server_reference.md` for the live-graph A-Z reference. |
 | 2 | System 2: knowledge graph | AGE graph live on cloud VPS, 115.4M nodes + 693.3M edges loaded 2026-04-22, queryable via openCypher. See `docs/Knowledge_graph_on_server_reference.md`. |
 | 3 | System 3: search agent | Lives in a separate repository. Do not build here. |
 

@@ -25,11 +25,11 @@ This is a work computer running AlmaLinux 8.10 (RHEL-compatible), not macOS or W
 | Host | iebdev22 |
 | Python | 3.11 at /opt/python-3.11 |
 | PostgreSQL | 14.6 at /usr/local/postgres/14.6 (binaries only, no running server) |
-| Home dir | /home/chakrabortim2 (NFS mount, 20G total, ~7G free) |
-| Data storage | /export/home/chakrabortim2/data (local disk, 4.3T volume, ~427G free) |
+| Home dir | /home/<you> (NFS mount, 20G total, ~7G free) |
+| Data storage | /export/home/<you>/data (local disk, 4.3T volume, ~427G free) |
 | Git | /opt/git |
 
-Storage warning: home directory is NFS-mounted with only 20G. Do not store FTP downloads or KGX output there. All data goes to `/export/home/chakrabortim2/data/` which has 427G available on local disk.
+Storage warning: home directory is NFS-mounted with only 20G. Do not store FTP downloads or KGX output there. All data goes to `/export/home/<you>/data/` which has 427G available on local disk.
 
 ## 1. Clone and Python environment
 
@@ -49,14 +49,14 @@ These are read-only context repos. Do not edit them.
 
 ```bash
 mkdir -p reference-repos
-ln -sf /home/chakrabortim2/ncbi_ai_agents reference-repos/ncbi_ai_agents
-ln -sf /home/chakrabortim2/personal-os-work reference-repos/personal-os
+ln -sf /home/<you>/ncbi_ai_agents reference-repos/ncbi_ai_agents
+ln -sf /home/<you>/personal-os-work reference-repos/personal-os  # local-refs: allow (public sibling repo name)
 ```
 
 If either path doesn't exist, find it:
 ```bash
-find /home/chakrabortim2 -maxdepth 4 -name "ncbi_ai_agents" -type d 2>/dev/null
-find /home/chakrabortim2 -maxdepth 4 -name "personal-os-work" -type d 2>/dev/null
+find /home/<you> -maxdepth 4 -name "ncbi_ai_agents" -type d 2>/dev/null
+find /home/<you> -maxdepth 4 -name "personal-os-work" -type d 2>/dev/null  # local-refs: allow (public sibling repo name)
 ```
 
 ## 3. Configure .env
@@ -69,11 +69,11 @@ Edit `.env` and set:
 
 - `NCBI_API_KEY` - your NCBI API key (required for 10 req/sec rate limit)
 - `NCBI_EMAIL` - your NCBI-registered email
-- `PG_USER` - output of `whoami` (chakrabortim2)
+- `PG_USER` - output of `whoami` (<you>)
 - `PG_PASSWORD` - leave empty for local Postgres
-- `FTP_CACHE_DIR` - set to `/export/home/chakrabortim2/data/ftp_cache`
-- `KGX_OUTPUT_DIR` - set to `/export/home/chakrabortim2/data/kgx`
-- `RAW_DATA_DIR` - set to `/export/home/chakrabortim2/data/raw`
+- `FTP_CACHE_DIR` - set to `/export/home/<you>/data/ftp_cache`
+- `KGX_OUTPUT_DIR` - set to `/export/home/<you>/data/kgx`
+- `RAW_DATA_DIR` - set to `/export/home/<you>/data/raw`
 
 ## 4. PostgreSQL + Apache AGE
 
@@ -83,10 +83,10 @@ When ready for System 2:
 
 ```bash
 # Initialize a data directory (pick a location with enough space)
-/usr/local/postgres/14.6/bin/initdb -D /export/home/chakrabortim2/pgdata
+/usr/local/postgres/14.6/bin/initdb -D /export/home/<you>/pgdata
 
 # Start the server
-/usr/local/postgres/14.6/bin/pg_ctl -D /export/home/chakrabortim2/pgdata -l /export/home/chakrabortim2/pgdata/logfile start
+/usr/local/postgres/14.6/bin/pg_ctl -D /export/home/<you>/pgdata -l /export/home/<you>/pgdata/logfile start
 
 # Create database and install AGE (if AGE extension is available)
 /usr/local/postgres/14.6/bin/createdb -h localhost ncbi_kg
@@ -121,7 +121,7 @@ Expected output: `NCBI API: OK, hits = 35995` or similar.
 ### Check 2: data storage is writable
 
 ```bash
-touch /export/home/chakrabortim2/data/ftp_cache/.test && echo "Storage: OK" && rm /export/home/chakrabortim2/data/ftp_cache/.test
+touch /export/home/<you>/data/ftp_cache/.test && echo "Storage: OK" && rm /export/home/<you>/data/ftp_cache/.test
 ```
 
 Expected output: `Storage: OK`
@@ -129,7 +129,7 @@ Expected output: `Storage: OK`
 ### Check 3: PostgreSQL (System 2 only, defer until needed)
 
 ```bash
-/usr/local/postgres/14.6/bin/pg_ctl -D /export/home/chakrabortim2/pgdata status
+/usr/local/postgres/14.6/bin/pg_ctl -D /export/home/<you>/pgdata status
 ```
 
 Once checks 1 and 2 pass, tell the user. They will kick off the plan. Check 3 can wait until System 2 work begins.

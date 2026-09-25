@@ -49,7 +49,7 @@ graph LR
 
 ## AGE graph (loaded 2026-04-22, Gate 3)
 
-The merged KGX was loaded into PostgreSQL 15.17 + Apache AGE 1.5.0 on the Hetzner CPX42 at `46.225.128.133`. Database: `ncbi_kg`. AGE schema: `ncbi_kg`.
+The merged KGX was loaded into PostgreSQL 15.17 + Apache AGE 1.5.0 on the Hetzner CPX42 at `<server-ip>`. Database: `ncbi_kg`. AGE schema: `ncbi_kg`.
 
 Live reference: `docs/Knowledge_graph_on_server_reference.md` (A-Z operations guide, index listing, query examples).
 
@@ -120,7 +120,7 @@ All current local data is stored under the repo-local `data/` directory on the W
 - `kgx/`: KGX output per database (nodes.tsv + edges.tsv)
 - `raw/`: intermediate parsed data (currently unused)
 
-Gate 1 entries below show `/export/home/chakrabortim2/data/...` paths because the Gate 1 runs happened on the NCBI server before the 2026-04-16 migration. The data has since been rsync'd to `C:\Users\chakrabortim2\Desktop\agentic-search-data-engineering\data\` on the laptop. Gate 2 entries use the laptop paths.
+Gate 1 entries below show `/export/home/<you>/data/...` paths because the Gate 1 runs happened on the NCBI server before the 2026-04-16 migration. The data has since been rsync'd to `C:\Users\<you>\Desktop\agentic-search-data-engineering\data\` on the laptop. Gate 2 entries use the laptop paths.
 
 ## Pipeline output vs live Entrez counts
 
@@ -152,8 +152,8 @@ See `docs/learnings.md` section "Entrez indexes vs bulk FTP flat files" for the 
 
 | File | Path | Rows | Size |
 |------|------|------|------|
-| nodes.tsv | C:\Users\chakrabortim2\Desktop\agentic-search-data-engineering\data\kgx\taxonomy\nodes.tsv | 2,736,607 | 410 MB |
-| edges.tsv | C:\Users\chakrabortim2\Desktop\agentic-search-data-engineering\data\kgx\taxonomy\edges.tsv | 2,736,606 | 359 MB |
+| nodes.tsv | C:\Users\<you>\Desktop\agentic-search-data-engineering\data\kgx\taxonomy\nodes.tsv | 2,736,607 | 410 MB |
+| edges.tsv | C:\Users\<you>\Desktop\agentic-search-data-engineering\data\kgx\taxonomy\edges.tsv | 2,736,606 | 359 MB |
 
 ### Node attributes
 
@@ -381,8 +381,8 @@ Merge: 2h 21min on Windows laptop. Pass 1 (nodes): ~30 min. Pass 2 (edges): ~110
 
 | File | Path | Rows |
 |------|------|------|
-| nodes.tsv | /export/home/chakrabortim2/data/kgx/medgen/nodes.tsv | 198,813 |
-| edges.tsv | /export/home/chakrabortim2/data/kgx/medgen/edges.tsv | 48,327,094 |
+| nodes.tsv | /export/home/<you>/data/kgx/medgen/nodes.tsv | 198,813 |
+| edges.tsv | /export/home/<you>/data/kgx/medgen/edges.tsv | 48,327,094 |
 
 ### Node attributes
 
@@ -431,8 +431,8 @@ Note: gene_refseq_uniprotkb_collab.gz has no GeneID column (maps protein accessi
 
 | File | Path | Rows | Size |
 |------|------|------|------|
-| nodes.tsv | /export/home/chakrabortim2/data/kgx/gene/nodes.tsv | 67,562,827 | 8.3 GB |
-| edges.tsv | /export/home/chakrabortim2/data/kgx/gene/edges.tsv | 278,665,267 | 31 GB |
+| nodes.tsv | /export/home/<you>/data/kgx/gene/nodes.tsv | 67,562,827 | 8.3 GB |
+| edges.tsv | /export/home/<you>/data/kgx/gene/edges.tsv | 278,665,267 | 31 GB |
 
 ### Node breakdown
 
@@ -475,8 +475,8 @@ Note: edges written via streaming append (5 batches) to avoid OOM on 278M edges.
 
 | File | Path | Rows |
 |------|------|------|
-| nodes.tsv | /export/home/chakrabortim2/data/kgx/clinvar/nodes.tsv | 4,426,035 |
-| edges.tsv | /export/home/chakrabortim2/data/kgx/clinvar/edges.tsv | 14,408,846 |
+| nodes.tsv | /export/home/<you>/data/kgx/clinvar/nodes.tsv | 4,426,035 |
+| edges.tsv | /export/home/<you>/data/kgx/clinvar/edges.tsv | 14,408,846 |
 
 ### Node attributes
 

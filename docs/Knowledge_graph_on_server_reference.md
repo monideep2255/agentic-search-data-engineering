@@ -1,6 +1,6 @@
 # Knowledge graph on the server: A to Z reference
 
-This doc is the single source of truth for the live PostgreSQL + AGE knowledge graph that runs on the Hetzner CPX42 VPS at `46.225.128.133`. It covers what is in the database, how it is laid out, how to connect, how to query without hitting the slow paths, what is indexed, what is not, how to maintain it, and what to do when something breaks. Read it before opening psql against the production graph for the first time.
+This doc is the single source of truth for the live PostgreSQL + AGE knowledge graph that runs on the Hetzner CPX42 VPS at `<server-ip>`. It covers what is in the database, how it is laid out, how to connect, how to query without hitting the slow paths, what is indexed, what is not, how to maintain it, and what to do when something breaks. Read it before opening psql against the production graph for the first time.
 
 ## Table of contents
 
@@ -127,7 +127,7 @@ Important gotcha: most diseases are stored under MedGen prefix, not MONDO. The o
 SSH and open psql:
 
 ```bash
-ssh root@46.225.128.133
+ssh root@<server-ip>
 sudo -u postgres psql -d ncbi_kg
 ```
 
@@ -304,7 +304,7 @@ Downgrade procedure (only after a verified snapshot):
 3. Wait for the new CPX32 to boot. Note its new IP address.
 4. SSH into the new server and run the smoke-test suite (`tests/cypher/gate3_queries.sql`) to confirm every Cypher query still passes at the new size.
 5. Only after the new server is verified: delete the old CPX42 in the Hetzner console. Billing on the old server stops immediately.
-6. Update the IP address in `CLAUDE.md`, `AGENTS.md`, `README.md`, `docs/Knowledge_graph_on_server_reference.md`, and any other file that hardcodes `46.225.128.133`.
+6. Update the IP address in `CLAUDE.md`, `AGENTS.md`, `README.md`, `docs/Knowledge_graph_on_server_reference.md`, and any other file that hardcodes `<server-ip>`.
 
 The graph data on disk is roughly 100 GB steady state, so 160 GB on CPX32 leaves about 60 GB of headroom. Tight but workable for a read-only graph. A full refresh (rerun all pipelines) would not fit on CPX32 because it needs ~250-300 GB peak during the load window; for a refresh, temporarily upgrade back to CPX42 (or larger), do the load, snapshot, restore-to-CPX32, delete the temporary CPX42. Same procedure as the initial downgrade.
 

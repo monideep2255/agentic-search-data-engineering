@@ -196,7 +196,7 @@ The deeper meta-lesson: when a tool's "load complete" message comes back, that m
 
 ## Gate 3 outcome: 5-database AGE graph live + queryable (2026-04-22)
 
-Phase 4.0 closed at 2026-04-22 ~12:00 ET. The 5-database merged knowledge graph is fully loaded into PostgreSQL 15.17 + Apache AGE 1.5.0 on the Hetzner CPX42 at `46.225.128.133`.
+Phase 4.0 closed at 2026-04-22 ~12:00 ET. The 5-database merged knowledge graph is fully loaded into PostgreSQL 15.17 + Apache AGE 1.5.0 on the Hetzner CPX42 at `<server-ip>`.
 
 Final counts in the graph:
 
@@ -294,7 +294,7 @@ Started Phase 4.0 execution on 2026-04-20. The VPS provisioning, software instal
 
 ### State at start of the phase
 
-From earlier setup on 2026-04-19: Hetzner CPX42 (IP `46.225.128.133`) provisioned, SSH key-auth working from the work laptop, rsync dry-run succeeded in PowerShell. From Gate 2: 144 GB merged KGX on the laptop C drive. Everything else was fresh.
+From earlier setup on 2026-04-19: Hetzner CPX42 (IP `<server-ip>`) provisioned, SSH key-auth working from the work laptop, rsync dry-run succeeded in PowerShell. From Gate 2: 144 GB merged KGX on the laptop C drive. Everything else was fresh.
 
 ### Problem 1: Git Bash MSYS path translation breaks rsync source path
 

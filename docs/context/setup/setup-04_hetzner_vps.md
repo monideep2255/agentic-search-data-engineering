@@ -64,7 +64,7 @@ The target spec comes from DECISIONS.md: CPX42, Nuremberg, no separate volume.
 
 ### Step A2: grab the public IP
 
-Once the server is running, Hetzner shows the public IPv4 on the server page. You will need this for every subsequent step. The actual IP for this deployment is `46.225.128.133` (captured 2026-04-19; substitute your own if you are redoing this from scratch).
+Once the server is running, Hetzner shows the public IPv4 on the server page. You will need this for every subsequent step. The actual IP for this deployment is `<server-ip>` (captured 2026-04-19; substitute your own if you are redoing this from scratch).
 
 ### Step A3: note the root credentials
 

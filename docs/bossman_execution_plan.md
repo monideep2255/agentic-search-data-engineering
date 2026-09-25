@@ -262,7 +262,7 @@ No storage problems at any step. No 500GB volume needed (dbSNP not pre-ingested)
 
 Local (current, post 2026-04-16 migration): all data on the Windows laptop C: drive under the repo-local path `C:/Users/<you>/agentic-search-data-engineering/data/`. Paths are configured in `.env` (see `docs/context/setup/setup-03_windows_laptop.md` for the full setup). FTP cache is kept for re-runs, and KGX files are deleted after rsync to the Hetzner VPS and cloud validation passes.
 
-Prior arrangement (retired 2026-04-16): data was symlinked from the repo to `/export/home/chakrabortim2/data/` on the NCBI server. `/export` is a 4.3TB LVM volume shared across ~925 machine users with no quota protection, which made the 51GB footprint a good-citizen concern and exposed the pipeline to silent disk contention. Migrated to laptop to eliminate both risks.
+Prior arrangement (retired 2026-04-16): data was symlinked from the repo to `/export/home/<you>/data/` on the NCBI server. `/export` is a 4.3TB LVM volume shared across ~925 machine users with no quota protection, which made the 51GB footprint a good-citizen concern and exposed the pipeline to silent disk contention. Migrated to laptop to eliminate both risks.
 
 Cloud: PostgreSQL + AGE database on Hetzner VPS (Nuremberg datacenter). This is the production instance that System 3 connects to. Cost: ~€26.39/mo all-in (~$30/mo) (CPX42: 8 vCPU, 16GB RAM, 320GB local disk + IPv4 address + snapshot). No separate volume needed. See DECISIONS.md row 80 for verified post-April-1-2026 Hetzner pricing and the CPX32-downsize deferral rationale.
 
@@ -610,7 +610,7 @@ The exact rsync command (captured from the working 2026-04-19 dry-run and extend
 ```powershell
 # From PowerShell (no MSYS path translation):
 $env:HOME = $env:USERPROFILE
-rsync -avP --compress --partial --inplace --timeout=600 -e "/cygdrive/c/Users/chakrabortim2/scoop/apps/cwrsync/6.4.7/bin/ssh.exe -i /cygdrive/c/Users/chakrabortim2/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=30 -o ServerAliveCountMax=20 -o TCPKeepAlive=yes" "/cygdrive/c/Users/chakrabortim2/Desktop/agentic-search-data-engineering/data/kgx/merged/" root@46.225.128.133:/root/data/kgx/merged/
+rsync -avP --compress --partial --inplace --timeout=600 -e "/cygdrive/c/Users/<you>/scoop/apps/cwrsync/6.4.7/bin/ssh.exe -i /cygdrive/c/Users/<you>/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=30 -o ServerAliveCountMax=20 -o TCPKeepAlive=yes" "/cygdrive/c/Users/<you>/Desktop/agentic-search-data-engineering/data/kgx/merged/" root@<server-ip>:/root/data/kgx/merged/
 ```
 
 From Git Bash, prefix with `MSYS_NO_PATHCONV=1` to disable MSYS path translation (see `docs/context/setup/setup-05_rsync_windows.md` Gotcha 4).
@@ -621,7 +621,7 @@ Because the connection drops every ~5 min / ~1.4 GB on home Wi-Fi (see setup-05 
 bash scripts/rsync-retry.sh
 ```
 
-Pre-step (one-time): `ssh root@46.225.128.133 "mkdir -p /root/data/kgx/merged"` before the first invocation.
+Pre-step (one-time): `ssh root@<server-ip> "mkdir -p /root/data/kgx/merged"` before the first invocation.
 
 Test queries (run on cloud; same as original Phase 3 test queries):
 - Gene to variant traversal (BRCA1)

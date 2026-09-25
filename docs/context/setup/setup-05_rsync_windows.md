@@ -267,7 +267,7 @@ rsync error: error in socket IO (code 10)
 or
 
 ```
-Read from remote host 46.225.128.133: Connection reset by peer
+Read from remote host <server-ip>: Connection reset by peer
 client_loop: send disconnect: Connection reset by peer
 rsync: [sender] write error: Broken pipe (32)
 ```
@@ -316,7 +316,7 @@ For a dry run (confirms the wiring without moving any bytes):
 
 ```powershell
 $env:HOME = $env:USERPROFILE
-rsync --dry-run -avP -e "/cygdrive/c/Users/chakrabortim2/scoop/apps/cwrsync/6.4.7/bin/ssh.exe -i /cygdrive/c/Users/chakrabortim2/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new" "/cygdrive/c/Users/chakrabortim2/Desktop/agentic-search-data-engineering/data/kgx/merged/" root@46.225.128.133:/tmp/rsync-test/
+rsync --dry-run -avP -e "/cygdrive/c/Users/<you>/scoop/apps/cwrsync/6.4.7/bin/ssh.exe -i /cygdrive/c/Users/<you>/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new" "/cygdrive/c/Users/<you>/Desktop/agentic-search-data-engineering/data/kgx/merged/" root@<server-ip>:/tmp/rsync-test/
 ```
 
 For the real Phase 4.0 transfer, three changes from the dry-run:
@@ -329,13 +329,13 @@ Real command:
 
 ```powershell
 $env:HOME = $env:USERPROFILE
-rsync -avP --compress -e "/cygdrive/c/Users/chakrabortim2/scoop/apps/cwrsync/6.4.7/bin/ssh.exe -i /cygdrive/c/Users/chakrabortim2/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new" "/cygdrive/c/Users/chakrabortim2/Desktop/agentic-search-data-engineering/data/kgx/merged/" root@46.225.128.133:/root/data/kgx/merged/
+rsync -avP --compress -e "/cygdrive/c/Users/<you>/scoop/apps/cwrsync/6.4.7/bin/ssh.exe -i /cygdrive/c/Users/<you>/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new" "/cygdrive/c/Users/<you>/Desktop/agentic-search-data-engineering/data/kgx/merged/" root@<server-ip>:/root/data/kgx/merged/
 ```
 
 One-time prep before the real transfer, to make sure the destination exists:
 
 ```powershell
-ssh root@46.225.128.133 "mkdir -p /root/data/kgx/merged"
+ssh root@<server-ip> "mkdir -p /root/data/kgx/merged"
 ```
 
 Flag explanation:

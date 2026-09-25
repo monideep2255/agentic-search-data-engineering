@@ -1,6 +1,6 @@
 # Technical reference: NCBI knowledge graph V1
 
-This is the technical walkthrough of the live V1 system: a BioLink-compliant knowledge graph built from 5 NCBI databases, merged into a single KGX dataset, and loaded into PostgreSQL 15.17 + Apache AGE 1.5.0 on a Hetzner CPX42 VPS at `46.225.128.133`. Final shape: 115,406,761 nodes and 693,295,991 edges across 11 vertex labels and 14 edge predicates. Read this if you need to understand what was built, how it was built, what it costs to run, and what the operating gotchas are.
+This is the technical walkthrough of the live V1 system: a BioLink-compliant knowledge graph built from 5 NCBI databases, merged into a single KGX dataset, and loaded into PostgreSQL 15.17 + Apache AGE 1.5.0 on a Hetzner CPX42 VPS at `<server-ip>`. Final shape: 115,406,761 nodes and 693,295,991 edges across 11 vertex labels and 14 edge predicates. Read this if you need to understand what was built, how it was built, what it costs to run, and what the operating gotchas are.
 
 This doc complements [docs/Knowledge_graph_on_server_reference.md](../Knowledge_graph_on_server_reference.md) (the live-server A-to-Z reference). Where overlap exists, this doc points there rather than repeating.
 
