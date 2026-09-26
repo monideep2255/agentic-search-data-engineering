@@ -70,3 +70,5 @@ scratch/
 reference/
 reference-repos/
 
+# Internal NCBI innovation proposal: kept on the owner's machine, never published.
+docs/context/Innovation_proposal_2026.md

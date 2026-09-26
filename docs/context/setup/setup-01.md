@@ -51,7 +51,7 @@ Why: the proposal defines what we are building. The architecture Q&A records eve
 Files (in order):
 1. `docs/System_1_data_engineering_plan.md`: what we're building and why (read first)
 2. `docs/architecture/Agentic_search_architecture_QA.md`: every architecture decision, with evidence
-3. `docs/context/Innovation_proposal_2026.md`: the full proposal (context and framing)
+3. `docs/context/Innovation_proposal_2026.md`: the full proposal (context and framing; local only, not published, so it is absent from a fresh clone)
 4. `docs/planning/Two_track_plan.md`: personal build vs NCBI proposal (parallel tracks)
 5. `docs/planning/Personal_build_plan.md`: 8-week execution plan, cost model
 

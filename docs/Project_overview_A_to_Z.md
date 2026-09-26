@@ -20,7 +20,7 @@ This is the single-source-of-truth navigation hub for the `agentic-search-data-e
 
 ## A. Project goals and scope
 
-The goal is a queryable knowledge graph stitched from 5 NCBI databases (Gene, ClinVar, MedGen, PubMed, Taxonomy) with full provenance on every node and edge, served by a downstream agentic search system. This repo covers the data engineering and graph layers only. For framing, see [Innovation proposal 2026](context/Innovation_proposal_2026.md). For how this graph fits the broader three-layer query architecture (Layer 1 graph, Layer 2 on-demand API, Layer 3 enrichment), see [Three-layer data architecture](architecture/Three_layer_data_architecture.md).
+The goal is a queryable knowledge graph stitched from 5 NCBI databases (Gene, ClinVar, MedGen, PubMed, Taxonomy) with full provenance on every node and edge, served by a downstream agentic search system. This repo covers the data engineering and graph layers only. The original innovation proposal that frames it is kept locally and not published. For how this graph fits the broader three-layer query architecture (Layer 1 graph, Layer 2 on-demand API, Layer 3 enrichment), see [Three-layer data architecture](architecture/Three_layer_data_architecture.md).
 
 ## B. Three-system architecture
 
