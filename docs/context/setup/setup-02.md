@@ -50,13 +50,13 @@ These are read-only context repos. Do not edit them.
 ```bash
 mkdir -p reference-repos
 ln -sf /home/<you>/ncbi_ai_agents reference-repos/ncbi_ai_agents
-ln -sf /home/<you>/personal-os-work reference-repos/personal-os  # local-refs: allow (public sibling repo name)
+ln -sf /home/<you>/<private-reference-repo> reference-repos/personal-os  # private and optional
 ```
 
 If either path doesn't exist, find it:
 ```bash
 find /home/<you> -maxdepth 4 -name "ncbi_ai_agents" -type d 2>/dev/null
-find /home/<you> -maxdepth 4 -name "personal-os-work" -type d 2>/dev/null  # local-refs: allow (public sibling repo name)
+find /home/<you> -maxdepth 4 -name "<private-reference-repo>" -type d 2>/dev/null
 ```
 
 ## 3. Configure .env

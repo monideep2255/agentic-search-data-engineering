@@ -26,7 +26,7 @@ See `DECISIONS.md` (2026-04-16 entry) for the rationale.
   |-- .env                                               <- gitignored, has API key
   |-- env.example                                        <- checked in template
   |-- reference-repos/ncbi_ai_agents -> /home/<you>/ncbi_ai_agents
-  |-- reference-repos/personal-os -> /home/<you>/personal-os-work    <!-- local-refs: allow (public sibling repo name) -->
+  |-- reference-repos/personal-os -> /home/<you>/<private-reference-repo>
 
 /export/home/<you>/data/
   |-- ftp_cache/   5.0 GB   raw NCBI FTP downloads (skip re-downloads)
@@ -41,7 +41,7 @@ Total: ~51 GB
 |-------|--------|-------|
 | 1. Repo clone | `git@github.com:monideep2255/agentic-search-data-engineering.git` | Main repo (System 1 + System 2) |
 | 2. Reference repo: ncbi_ai_agents | `git@github.com:monideep2255/ncbi_ai_agents.git` | Canonical BioLink pipeline. Referenced throughout CLAUDE.md and rules. |
-| 3. Reference repo: personal-os-work | `git@github.com:monideep2255/personal-os-work.git` | Source for skills and agents adapted into `.claude/`. |
+| 3. Reference repo: private personal OS (optional) | Not public; skip this row if you do not have access | Source for skills and agents adapted into `.claude/`. |
 | 4. `.env` file | Copy from server via scp, or regenerate from `env.example` | Contains NCBI_API_KEY, treat as secret |
 | 5. Data directory | Rsync from server (~51 GB) | FTP cache + Gate 1 KGX |
 | 6. Python 3.11+ | python.org or via conda | |
@@ -80,7 +80,7 @@ Clone them somewhere convenient on disk (HTTPS shown; SSH works too if you have 
 ```powershell
 cd C:\Users\<you>\
 git clone https://github.com/monideep2255/ncbi_ai_agents.git
-git clone https://github.com/monideep2255/personal-os-work.git
+# The private reference repository is not public; skip it if you do not have access.
 ```
 
 Check out the right branch for `ncbi_ai_agents`:
@@ -96,10 +96,10 @@ Then create junction points inside the main repo. Junctions work on any Windows 
 cd C:\Users\<you>\agentic-search-data-engineering
 mkdir reference-repos
 cmd /c mklink /J reference-repos\ncbi_ai_agents C:\Users\<you>\ncbi_ai_agents
-cmd /c mklink /J reference-repos\personal-os C:\Users\<you>\personal-os-work
+cmd /c mklink /J reference-repos\personal-os C:\Users\<you>\<private-reference-repo>
 ```
 
-If the source folder names differ on your machine (for example you cloned personal-os-work into a folder called `Personal OS` with a space), the junction target is the only path that matters. Point the junction at whatever local path actually holds the clone.
+If the source folder names differ on your machine (for example you cloned a reference repository into a folder whose name contains a space), the junction target is the only path that matters. Point the junction at whatever local path actually holds the clone.
 
 If you prefer full Windows symlinks (requires admin PowerShell or Developer Mode), substitute `New-Item -ItemType SymbolicLink -Path <junction-name> -Target <source>` for each `mklink` line. Copying the folder contents directly into `reference-repos/` also works if you do not plan to pull updates into the reference repos.
 
@@ -212,6 +212,6 @@ You can keep the server repo clone as a fallback SSH dev environment. It costs ~
 
 - Repo on `C:/Users/<you>/agentic-search-data-engineering/`
 - Data on `C:/Users/<you>/agentic-search-data-engineering/data/`
-- Reference repos at `C:/Users/<you>/ncbi_ai_agents/` and `C:/Users/<you>/personal-os-work/`
+- Reference repos at `C:/Users/<you>/ncbi_ai_agents/` and `C:/Users/<you>/<private-reference-repo>/`
 - Server `/export` footprint: 0 GB
 - Ready to run Gate 2 (PubMed + Taxonomy + merge) on the laptop

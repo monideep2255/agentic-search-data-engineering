@@ -91,9 +91,9 @@ Review:
 
 - `ncbi_ai_agents-ncbi-kg/.claude/agents/`: 4 agents, specifically `biomedical-expert.md`, `doc-sync.md`, `first-principles.md`, `git-sync.md`
 - `ncbi_ai_agents-ncbi-kg/.claude/skills/`: 15 skills including `architecture-patterns`, `best-practices`, `python-code-standards`, `testing-standards`, `documentation-standards`
-- `personal-os-work/.claude/skills/`: `repo-dive`, `eval-harness`, `ship`, `objective-review`, `first-principles`
-- `personal-os-work/.claude/hooks/`: `scan-secrets.sh`, `session-start.sh`, `log-git-commands.sh`
-- `personal-os-work/.claude/rules/`: `system-design-patterns.md`, `dependency-tracking.md`
+- `<private-reference-repo>/.claude/skills/`: `repo-dive`, `eval-harness`, `ship`, `objective-review`, `first-principles`
+- `<private-reference-repo>/.claude/hooks/`: `scan-secrets.sh`, `session-start.sh`, `log-git-commands.sh`
+- `<private-reference-repo>/.claude/rules/`: `system-design-patterns.md`, `dependency-tracking.md`
 
 Caveat: the working directory contains a space (`Tech Skills/`), which confuses the Explore subagent. Review these files manually with `Read` and `Glob` rather than dispatching a subagent.
 
@@ -109,7 +109,7 @@ Specifically:
 - Add any new decisions to `DECISIONS.md` that came out of the context review
 - Flag any architecture conflicts between the ncbi-kg repo review and our plan
 
-Decision logging: this repo maintains `DECISIONS.md` as a running log of every architecture and implementation choice, modeled on `personal-os-work/NIH/Agentic-Search/Data/reference/Decision_log_agentic_search.md`. Every time a non-trivial choice is made (database, library, pipeline pattern, schema approach), log it with: decision, what was said, what it changed, alternatives considered. Do not re-debate logged decisions without updating the log.
+Decision logging: this repo maintains `DECISIONS.md` as a running log of every architecture and implementation choice, modeled on a decision log the owner keeps in private notes. Every time a non-trivial choice is made (database, library, pipeline pattern, schema approach), log it with: decision, what was said, what it changed, alternatives considered. Do not re-debate logged decisions without updating the log.
 
 ### Step 6: ask Monideep clarification questions
 
