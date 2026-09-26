@@ -6,6 +6,16 @@ This repo covers System 1 (data pipelines) and System 2 (knowledge graph) only. 
 
 Stack: Python 3.11+, LinkML, BioLink 4.x, KGX, PostgreSQL 15 + Apache AGE.
 
+This repository has been public since 2026-09-24. Everything committed is world-readable and effectively permanent, including history, commit messages, and author metadata. Before committing anything:
+
+- No secrets: keys, tokens, passwords, or connection strings with credentials. Use environment variables and `env.example` placeholders.
+- No personal data about anyone, and no work identity details such as work email addresses or internal usernames. Commit with a GitHub noreply address.
+- No employer-internal material: internal proposals, budgets, strategy notes, Jira keys, internal hosts, or internal IP addresses. The innovation proposal stays local and gitignored; never re-add it.
+- No colleague names, local machine paths, private repository names, or server addresses with login commands. Use placeholders such as `<repo-root>`, `<you>`, and `<server-ip>`.
+- Never bypass a pre-commit hook with `--no-verify`. If something slips, remove it, tell the owner, and rotate any exposed secret at once.
+
+The fuller version of these rules is `.claude/rules/public-repository-privacy.md` where that folder is present.
+
 ---
 
 ## Current focus
@@ -156,7 +166,7 @@ User-invocable skills (slash commands):
 
 Auto-read skills (loaded by other skills or before specific tasks): best-practices, qa-gate, release-workflow, visualization-standards, architecture-patterns, documentation-standards, python-code-standards, testing-standards, eval-harness.
 
-All rules are in `.claude/rules/` and loaded automatically. No need to duplicate here.
+All rules are in `.claude/rules/` and loaded automatically. No need to duplicate here, except `public-repository-privacy` (this repository is public, see above).
 
 ---
 
