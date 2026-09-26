@@ -72,7 +72,7 @@ The full V1 graph runs at roughly $30 per month on a Hetzner CPX42 VPS. See the 
 
 ## H. How decisions are tracked
 
-Non-trivial choices, between alternatives, get a row in [DECISIONS.md](../DECISIONS.md). The format is a single append-only table: date, decision, alternatives considered, why. The rule is in [.claude/rules/decision-logging.md](../.claude/rules/decision-logging.md). Entries are never deleted; the file is the historical record.
+Non-trivial choices, between alternatives, get a row in [DECISIONS.md](../DECISIONS.md). The format is a single append-only table: date, decision, alternatives considered, why. The rule is in .claude/rules/decision-logging.md. Entries are never deleted; the file is the historical record.
 
 ## I. How problems and learnings are tracked
 
