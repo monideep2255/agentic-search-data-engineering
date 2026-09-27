@@ -1,0 +1,114 @@
+# Release: tag, changelog, GitHub Release, back-merge.
+#
+# Ported on 2026-09-27 from System 3 (the agentic-search-ui repository), whose
+# release cadence this repository now follows (DECISIONS.md, 2026-09-27). Build
+# phase and finding names below and in `.github/release/` (4.14, 4.15,
+# F-4.15-*) are System 3's, recorded in that repository's
+# tracker/phase_4.15.md. Fires on a push to `production`, which by the release
+# flow in docs/bossman_execution_plan.md ("Release flow") means the owner
+# merged a release pull request from `develop`.
+#
+# THIS JOB NEVER PUSHES TO `production`. On 2026-09-27 the owner chose that
+# `production`, like `develop`, accepts changes from the owner's account
+# alone, and GitHub refuses to exempt the Actions robot from such a ruleset on
+# a personal-account repository, so the robot does not write to `production`
+# at all. The job pushes exactly two things: the release tag, on the
+# production commit the version was derived from, and a
+# `chore/back-merge-<version>` branch. The changelog commit rides on that
+# branch into `develop` through a pull request, and reaches `production` with
+# the next release. The next release recognises it and leaves it out of its
+# own notes and its version bump (.github/release/commit_lib.sh).
+#
+# IF THE OWNER HAS NOT MERGED THE PREVIOUS BACK-MERGE before the next release,
+# `production`'s CHANGELOG.md is missing the previous release's section. The
+# carry step below then merges the previous changelog commit into this
+# checkout, never into `production`, so the new section is written on top of
+# the old one and the new back-merge pull request carries both. If that merge
+# cannot be done, the step says so in the log and the release goes ahead
+# without it.
+#
+# THIS FILE CONTAINS NO SHELL CODE, the rule System 3's workflows follow, for a
+# reason measured there. System 3's build phase 4.14 twice tried to verify
+# inline shell by matching strings in a `run:` body and was defeated twice, the
+# second time by `run: ":;#ruff check"`, which executes nothing while reading
+# as if it runs ruff. Every step's `run:` here is exactly one token: the path
+# of a script in `.github/release/`. A whole-string equality has no room for a
+# comment or a second command.
+#
+# SCRIPT INJECTION, and why no commit text appears in this file. A commit
+# subject is attacker-influenced: anyone who can open a pull request can choose
+# it. GitHub's own guidance names `github.event.commits.*.message` and
+# `github.event.head_commit.message` as injection sinks, because `${{ }}`
+# interpolation splices their text into the shell before bash parses it. This
+# workflow never interpolates any `github.event` value. The scripts read commit
+# text with `git log`, where it arrives as data on a pipe and is only matched
+# against, never executed.
+#
+# tests/release/test_release_scripts.py runs these steps, in this order and
+# with this environment, against a throwaway repository, and fails if
+# `production` moves.
+name: Release
+
+on:
+  push:
+    branches: [production]
+
+# Two jobs never race to tag the same commit.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+# Least privilege, and both are genuinely needed: `contents` to push the tag
+# and the back-merge branch, `pull-requests` to open the back-merge. Neither is
+# used to push to `production`, which no step does.
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    name: Tag, changelog and back-merge
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The full history and every tag. `git describe --tags` finds the
+          # previous release, and a shallow clone has no tags to find, so the
+          # first release would look like the only release on every run.
+          fetch-depth: 0
+          ref: production
+
+      - name: Derive the next version from the conventional commits
+        id: version
+        run: .github/release/derive_version.sh
+
+      - name: Carry the previous changelog if its back-merge is still open
+        if: steps.version.outputs.should_release == 'true'
+        env:
+          PREVIOUS_TAG: ${{ steps.version.outputs.previous_tag }}
+        run: .github/release/carry_previous_changelog.sh
+
+      - name: Write the changelog section
+        if: steps.version.outputs.should_release == 'true'
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          PREVIOUS_TAG: ${{ steps.version.outputs.previous_tag }}
+          RELEASE_SHA: ${{ steps.version.outputs.release_sha }}
+        run: .github/release/write_changelog.sh
+
+      - name: Tag production, commit the changelog locally, publish the release
+        if: steps.version.outputs.should_release == 'true'
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          RELEASE_SHA: ${{ steps.version.outputs.release_sha }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: .github/release/tag_and_release.sh
+
+      - name: Open the back-merge into develop
+        if: steps.version.outputs.should_release == 'true'
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: .github/release/open_backmerge_pr.sh
