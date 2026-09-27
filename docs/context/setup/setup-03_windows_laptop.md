@@ -1,6 +1,6 @@
 # Local setup (Windows laptop)
 
-One-time setup guide for running this repo on your personal Windows laptop C: drive instead of the shared NCBI `/export` volume. Gate 2 and all subsequent local work runs from here.
+One-time setup guide for running this repository on your personal Windows laptop C: drive instead of the shared NCBI `/export` volume. Gate 2 and all subsequent local work runs from here.
 
 See `DECISIONS.md` (2026-04-16 entry) for the rationale.
 
@@ -9,8 +9,8 @@ See `DECISIONS.md` (2026-04-16 entry) for the rationale.
 - [Current state on the server (what you are migrating from)](#current-state-on-the-server-what-you-are-migrating-from)
 - [What you need on the laptop](#what-you-need-on-the-laptop)
 - [Step 1: download data from server (~51 GB)](#step-1-download-data-from-server-51-gb)
-- [Step 2: clone the main repo](#step-2-clone-the-main-repo)
-- [Step 3: clone the two reference repos](#step-3-clone-the-two-reference-repos)
+- [Step 2: clone the main repository](#step-2-clone-the-main-repository)
+- [Step 3: clone the two reference repositories](#step-3-clone-the-two-reference-repositories)
 - [Step 4: create `.env`](#step-4-create-env)
 - [Step 5: Python environment](#step-5-python-environment)
 - [Step 6: verify the migration](#step-6-verify-the-migration)
@@ -39,9 +39,9 @@ Total: ~51 GB
 
 | Piece | Source | Notes |
 |-------|--------|-------|
-| 1. Repo clone | `git@github.com:monideep2255/agentic-search-data-engineering.git` | Main repo (System 1 + System 2) |
-| 2. Reference repo: ncbi_ai_agents | `git@github.com:monideep2255/ncbi_ai_agents.git` | Canonical BioLink pipeline. Referenced throughout CLAUDE.md and rules. |
-| 3. Reference repo: private personal OS (optional) | Not public; skip this row if you do not have access | Source for skills and agents adapted into `.claude/`. |
+| 1. Repository clone | `git@github.com:monideep2255/agentic-search-data-engineering.git` | Main repository (System 1 + System 2) |
+| 2. Reference repository: ncbi_ai_agents | `git@github.com:monideep2255/ncbi_ai_agents.git` | Canonical BioLink pipeline. Referenced throughout CLAUDE.md and rules. |
+| 3. Reference repository: private personal OS (optional) | Not public; skip this row if you do not have access | Source for skills and agents adapted into `.claude/`. |
 | 4. `.env` file | Copy from server via scp, or regenerate from `env.example` | Contains NCBI_API_KEY, treat as secret |
 | 5. Data directory | Rsync from server (~51 GB) | FTP cache + Gate 1 KGX |
 | 6. Python 3.11+ | python.org or via conda | |
@@ -62,7 +62,7 @@ Use the repo-local `data/` directory as the canonical storage root. On the lapto
 
 If the rsync gets interrupted, rerun the same `rsync -avP` command and it resumes.
 
-## Step 2: clone the main repo
+## Step 2: clone the main repository
 
 ```powershell
 cd C:\Users\<you>\
@@ -71,9 +71,9 @@ git clone git@github.com:monideep2255/agentic-search-data-engineering.git
 cd agentic-search-data-engineering
 ```
 
-## Step 3: clone the two reference repos
+## Step 3: clone the two reference repositories
 
-These are separate git repos that the main repo reads as read-only context. They live inside `reference-repos/`, which is gitignored, so each machine sets up its own.
+These are separate git repositories that the main repository reads as read-only context. They live inside `reference-repos/`, which is gitignored, so each machine sets up its own.
 
 Clone them somewhere convenient on disk (HTTPS shown; SSH works too if you have a key set up):
 
@@ -90,7 +90,7 @@ cd C:\Users\<you>\ncbi_ai_agents
 git checkout ncbi-kg
 ```
 
-Then create junction points inside the main repo. Junctions work on any Windows account, no admin or Developer Mode needed:
+Then create junction points inside the main repository. Junctions work on any Windows account, no admin or Developer Mode needed:
 
 ```powershell
 cd C:\Users\<you>\agentic-search-data-engineering
@@ -101,7 +101,7 @@ cmd /c mklink /J reference-repos\personal-os C:\Users\<you>\<private-reference-r
 
 If the source folder names differ on your machine (for example you cloned a reference repository into a folder whose name contains a space), the junction target is the only path that matters. Point the junction at whatever local path actually holds the clone.
 
-If you prefer full Windows symlinks (requires admin PowerShell or Developer Mode), substitute `New-Item -ItemType SymbolicLink -Path <junction-name> -Target <source>` for each `mklink` line. Copying the folder contents directly into `reference-repos/` also works if you do not plan to pull updates into the reference repos.
+If you prefer full Windows symlinks (requires admin PowerShell or Developer Mode), substitute `New-Item -ItemType SymbolicLink -Path <junction-name> -Target <source>` for each `mklink` line. Copying the folder contents directly into `reference-repos/` also works if you do not plan to pull updates into the reference repositories.
 
 ## Step 4: create `.env`
 
@@ -194,7 +194,7 @@ rm -rf /export/home/<you>/data/raw
 # rm -rf /home/<you>/agentic-search-data-engineering
 ```
 
-You can keep the server repo clone as a fallback SSH dev environment. It costs ~50 MB on `/home` (NFS) and nothing on `/export`.
+You can keep the server repository clone as a fallback SSH dev environment. It costs ~50 MB on `/home` (NFS) and nothing on `/export`.
 
 ## Gotchas
 
@@ -206,12 +206,12 @@ You can keep the server repo clone as a fallback SSH dev environment. It costs ~
 | Laptop sleep during long jobs | PubMed ETL is ~8 hours. Power settings → "never sleep when plugged in". Pause Windows Update during Gate 2. |
 | Phase 4 rsync to Hetzner VPS | 140 GB upload from home Wi-Fi: 6-16 hrs. Schedule as overnight/weekend. rsync resumes cleanly on drop. |
 | `<SERVER>` placeholder in this doc | Replace with your SSH hostname for the NCBI Linux box (whatever you type after `ssh`). |
-| Reference repos get updates | If you update the main repo's reference to a rule/skill, also push the matching change to the personal-os repo (see `.claude/skills/skill-adapt-verify`). |
+| Reference repositories get updates | If you update the main repository's reference to a rule/skill, also push the matching change to the personal-os repository (see `.claude/skills/skill-adapt-verify`). |
 
 ## Where this leaves you
 
-- Repo on `C:/Users/<you>/agentic-search-data-engineering/`
+- Repository on `C:/Users/<you>/agentic-search-data-engineering/`
 - Data on `C:/Users/<you>/agentic-search-data-engineering/data/`
-- Reference repos at `C:/Users/<you>/ncbi_ai_agents/` and `C:/Users/<you>/<private-reference-repo>/`
+- Reference repositories at `C:/Users/<you>/ncbi_ai_agents/` and `C:/Users/<you>/<private-reference-repo>/`
 - Server `/export` footprint: 0 GB
 - Ready to run Gate 2 (PubMed + Taxonomy + merge) on the laptop

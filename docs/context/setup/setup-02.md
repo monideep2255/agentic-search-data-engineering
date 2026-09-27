@@ -45,7 +45,7 @@ pip install -r requirements.txt
 
 ## 2. Recreate reference symlinks
 
-These are read-only context repos. Do not edit them.
+These are read-only context repositories. Do not edit them.
 
 ```bash
 mkdir -p reference-repos

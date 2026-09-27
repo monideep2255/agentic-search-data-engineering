@@ -17,7 +17,7 @@ What we are building, why, and how. Crystallized from the April 2 brainstorming 
 - [Build order](#build-order)
 - [What "done" looks like for System 1](#what-done-looks-like-for-system-1)
 - [What System 1 does NOT do](#what-system-1-does-not-do)
-- [Repo structure decision](#repo-structure-decision)
+- [Repository structure decision](#repository-structure-decision)
 - [How System 2 connects](#how-system-2-connects)
 - [Graph database options](#graph-database-options)
 - [Validation: how to know System 1 is working](#validation-how-to-know-system-1-is-working)
@@ -366,7 +366,7 @@ If the answer says "BRCA1 has 744 pathogenic variants," the user can click throu
 
 ## Schema: where it lives
 
-The BioLink schema is a shared artifact that lives at the repo root (`schema/biolink_ncbi.yaml`). Both System 1 (for mapping and validation) and System 2 (for graph loading) consume it. It is defined once, before any pipeline code, and updated when new node types or predicates are needed.
+The BioLink schema is a shared artifact that lives at the repository root (`schema/biolink_ncbi.yaml`). Both System 1 (for mapping and validation) and System 2 (for graph loading) consume it. It is defined once, before any pipeline code, and updated when new node types or predicates are needed.
 
 ### Node types (from our 5 databases)
 
@@ -428,7 +428,7 @@ Why first: these three databases have the richest cross-references to each other
 
 | Step | What | Output | Validates |
 |---|---|---|---|
-| 1a | Define shared LinkML schema (node types, edge types, required properties) in `schema/` at repo root | `schema/biolink_ncbi.yaml` | Schema is parseable and BioLink-compliant, importable by both System 1 and System 2 |
+| 1a | Define shared LinkML schema (node types, edge types, required properties) in `schema/` at repository root | `schema/biolink_ncbi.yaml` | Schema is parseable and BioLink-compliant, importable by both System 1 and System 2 |
 | 1b | Gene ETL pipeline: download gene_info, gene2go, gene2pubmed from FTP | Gene KGX (nodes.tsv + edges.tsv) | Gene nodes have NCBIGene: IDs, xrefs include HGNC/OMIM |
 | 1c | ClinVar ETL pipeline: download ClinVarFullRelease.xml from FTP | ClinVar KGX | Variant nodes link to Gene IDs and MedGen CUIs |
 | 1d | MedGen ETL pipeline: download MedGenIDMappings and MGREL from FTP | MedGen KGX | Disease nodes have MONDO IDs (where available) and xrefs |
@@ -475,15 +475,15 @@ Phase 3 instead covers the AGE loader: loading the 5-database merged KGX into Po
 ## What System 1 does NOT do
 
 - Does not load data into the graph database (that's System 2)
-- Does not own the schema alone (schema is shared in `schema/` at repo root, consumed by both System 1 and System 2)
+- Does not own the schema alone (schema is shared in `schema/` at repository root, consumed by both System 1 and System 2)
 - Does not handle user queries (that's System 3)
 - Does not call live APIs (Layer 2/3 are query-time concerns in System 3)
 
-## Repo structure decision
+## Repository structure decision
 
-System 1 can be its own repo. The output is KGX files. System 2 consumes those files. Clean boundary.
+System 1 can be its own repository. The output is KGX files. System 2 consumes those files. Clean boundary.
 
-You could also have System 2 in the same repo under a different folder (the repo structure in the Personal_build_plan.md already does this with `data-pipelines/` and `knowledge-graph/`). Up to you whether it's one monorepo or separate repos. For a portfolio project, one repo is simpler.
+You could also have System 2 in the same repository under a different folder (the repository structure in the Personal_build_plan.md already does this with `data-pipelines/` and `knowledge-graph/`). Up to you whether it's one monorepo or separate repositories. For a portfolio project, one repository is simpler.
 
 ## How System 2 connects
 
@@ -542,7 +542,7 @@ Disk constraint: with 5 databases (dbSNP deferred to System 3 API), the total me
 
 Production runs on the Hetzner CPX42 (~$34/month). The code and KGX files are portable since they are just files on disk.
 
-For portfolio/open source sharing: the code (pipelines, schema, agents) lives in a public GitHub repo regardless of where the data runs. The graph database with 115M nodes is too large to share as a download. The portfolio is the code and architecture, not the running instance.
+For portfolio/open source sharing: the code (pipelines, schema, agents) lives in a public GitHub repository regardless of where the data runs. The graph database with 115M nodes is too large to share as a download. The portfolio is the code and architecture, not the running instance.
 
 ## Validation: how to know System 1 is working
 
@@ -579,7 +579,7 @@ If those return sensible results, System 1 is working. If they return 0 or garba
 - [ ] NCBI API key in .env (already have it)
 - [ ] Python 3.11+ environment
 - [ ] Graph database installed locally (PostgreSQL + Apache AGE)
-- [ ] Clone/init the repo structure
+- [ ] Clone/init the repository structure
 - [ ] LinkML installed (`pip install linkml`) for schema validation
 
 ## Update schedules (how often FTP sources refresh)

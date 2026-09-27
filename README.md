@@ -39,15 +39,15 @@ Round to **$30/month** for FX volatility headroom. CPX42 was kept (instead of do
 
 ## Architecture
 
-This repo builds Layer 1 of a three-layer data architecture:
+This repository builds Layer 1 of a three-layer data architecture:
 
 | Layer | What | Where | Latency |
 |-------|------|-------|---------|
-| Layer 1: knowledge graph | 5 NCBI databases fully ingested into PostgreSQL + AGE | This repo (System 1 + 2) | <10ms per Cypher query |
-| Layer 2: on-demand API | 30+ NCBI databases reached at query time via ELink/EFetch | Separate repo (System 3) | 200-500ms per call |
-| Layer 3: enrichment APIs | PubTator3, LitVar2, LitSense, ClinicalTrials.gov | Separate repo (System 3) | 500ms-2s per call |
+| Layer 1: knowledge graph | 5 NCBI databases fully ingested into PostgreSQL + AGE | This repository (System 1 + 2) | <10ms per Cypher query |
+| Layer 2: on-demand API | 30+ NCBI databases reached at query time via ELink/EFetch | Separate repository (System 3) | 200-500ms per call |
+| Layer 3: enrichment APIs | PubTator3, LitVar2, LitSense, ClinicalTrials.gov | Separate repository (System 3) | 500ms-2s per call |
 
-This repo handles Layer 1 only: download, parse, map, validate, load. Layers 2 and 3 are query-time concerns handled by the search agent in a separate repository.
+This repository handles Layer 1 only: download, parse, map, validate, load. Layers 2 and 3 are query-time concerns handled by the search agent in a separate repository.
 
 ```
 System 1: data pipelines (this repo)
@@ -101,7 +101,7 @@ python system-01-data-pipelines/gene/pipeline.py
 
 | Doc | What it covers |
 |-----|---------------|
-| [Project overview A to Z](docs/Project_overview_A_to_Z.md) | Single-source-of-truth navigation hub for everything in this repo |
+| [Project overview A to Z](docs/Project_overview_A_to_Z.md) | Single-source-of-truth navigation hub for everything in this repository |
 | [Execution plan](docs/bossman_execution_plan.md) | Phase-by-phase build plan with status, gates, validation checklist, disk budget |
 | [Three-layer architecture](docs/architecture/Three_layer_data_architecture.md) | Layer 1 (graph), Layer 2 (on-demand API), Layer 3 (enrichment), cost breakdown |
 | [Merge logic explained](docs/architecture/Merge_logic_explained.md) | First-principles walkthrough of the 5-database streaming merge, dedup strategy, stub injection |
@@ -110,7 +110,7 @@ python system-01-data-pipelines/gene/pipeline.py
 | [Learnings](docs/learnings.md) | Problems encountered and solutions, updated after every pipeline run |
 | [BioLink schema](schema/biolink_ncbi.yaml) | LinkML schema with 10 node types, 14 predicates |
 | [Decisions](DECISIONS.md) | Architecture and implementation decisions with rationale |
-| [Local setup](docs/context/setup/setup-03_windows_laptop.md) | One-time migration guide for Windows laptop (repo clone, symlinks, venv, data rsync, verification) |
+| [Local setup](docs/context/setup/setup-03_windows_laptop.md) | One-time migration guide for Windows laptop (repository clone, symlinks, venv, data rsync, verification) |
 | [Live graph reference](docs/Knowledge_graph_on_server_reference.md) | A-Z operations guide for the live V1 graph: SSH access, Cypher queries, index listing, node/edge counts, cost breakdown, snapshot procedure |
 | [Data mapping and ontology explained](docs/architecture/Data_mapping_and_ontology_explained.md) | A-Z walkthrough of how raw NCBI data becomes a BioLink graph: CURIEs, per-pipeline mapping rules, merge logic, BioLink 4.x compliance |
 | [Technical reference: data engineering](docs/architecture/Technical_reference_data_engineering.md) | End-to-end technical walkthrough of the V1 system: architecture, schema, indexing, Cypher patterns, performance baselines, lessons |

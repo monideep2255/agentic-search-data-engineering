@@ -2,7 +2,7 @@
 
 Claude Code instructions for `agentic-search-data-engineering`. This IS a software project.
 
-This repo covers System 1 (data pipelines) and System 2 (knowledge graph) only. System 3 (search agent, FastAPI, LangGraph, UI, delivery channels) lives in a separate repository. Do not add System 3 dependencies or code here.
+This repository covers System 1 (data pipelines) and System 2 (knowledge graph) only. System 3 (search agent, FastAPI, LangGraph, UI, delivery channels) lives in a separate repository. Do not add System 3 dependencies or code here.
 
 Stack: Python 3.11+, LinkML, BioLink 4.x, KGX, PostgreSQL 15 + Apache AGE.
 
@@ -38,7 +38,7 @@ System 2: knowledge graph (this repo)
   KGX files -> normalize -> merge -> PostgreSQL + AGE -> openCypher
 ```
 
-This repo builds Layer 1 (fully ingested knowledge graph) of a three-layer data architecture. Layers 2 and 3 (on-demand API, enrichment) are query-time concerns in a separate repo. See `docs/architecture/Three_layer_data_architecture.md`.
+This repository builds Layer 1 (fully ingested knowledge graph) of a three-layer data architecture. Layers 2 and 3 (on-demand API, enrichment) are query-time concerns in a separate repository. See `docs/architecture/Three_layer_data_architecture.md`.
 
 ---
 
@@ -49,12 +49,12 @@ This repo builds Layer 1 (fully ingested knowledge graph) of a three-layer data 
 | `System_1_data_engineering_plan.md` | Detailed build plan for all 5 ETL pipelines | Before writing any pipeline code |
 | `NCBI_databases_and_APIs_reference.md` | Raw data on all 39 NCBI databases, FTP paths, record counts | Checking FTP URLs and file formats |
 | `architecture/Biolink_repos_explained.md` | BioLink/LinkML reference | Schema design |
-| `architecture/Three_layer_data_architecture.md` | Layer 1 (graph), Layer 2 (on-demand API), Layer 3 (enrichment). What this repo does vs System 3. | Understanding system boundaries |
+| `architecture/Three_layer_data_architecture.md` | Layer 1 (graph), Layer 2 (on-demand API), Layer 3 (enrichment). What this repository does vs System 3. | Understanding system boundaries |
 | `architecture/Merge_logic_explained.md` | First-principles walkthrough of the 5-database merge: streaming passes, dedup strategy, stub injection, dangling-edge detection | Before modifying merger.py or writing Phase 3 loader code |
 | `architecture/AGE_loader_explained.md` | First-principles walkthrough of the Phase 3 AGE loader: KG structure, why AGE over Neo4j, performance expectations, hosting comparison (Hetzner vs Netcup vs Contabo, US vs EU) | Before writing any Phase 3 loader or Phase 4 cloud-deploy code |
 | `context/Innovation_proposal_2026.md` | Full system proposal (local only, not published) | Context and framing |
 | `bossman_execution_plan.md` | Phase-by-phase execution plan for System 1 pipelines (bossman mode reference) | Before starting any bossman phase |
-| `context/setup/setup-03_windows_laptop.md` | One-time setup guide for Windows laptop (repo clone, symlinks, venv, data rsync) | When setting up a new local dev environment |
+| `context/setup/setup-03_windows_laptop.md` | One-time setup guide for Windows laptop (repository clone, symlinks, venv, data rsync) | When setting up a new local dev environment |
 | `context/setup/setup-04_hetzner_vps.md` | End-to-end Hetzner CPX42 provisioning: SSH keys from personal computer and work laptop, rsync install, PostgreSQL + AGE install, pre-Phase-4.0 verification | Before Phase 4.0 cloud deploy work |
 | `context/setup/setup-05_rsync_windows.md` | First-principles rsync on a locked-down Windows laptop: Scoop + cwRsync install, cygdrive path format, cwRsync vs Windows OpenSSH pipe incompatibility, HOME env var fix, exact working command, transfer time estimate | Before running Phase 4.0 rsync from the work laptop |
 | `Knowledge_graph_on_server_reference.md` | A-Z operations reference for the live V1 graph on Hetzner CPX42: SSH access, Cypher query examples, index listing, node/edge counts, cost breakdown, snapshot procedure | Before querying or maintaining the live graph |
@@ -80,7 +80,7 @@ Patterns to copy directly:
 
 Reference BioLink schema (8 categories, 15 predicates) is encoded in `assembly.py` and `export.py`. Copy categories and predicates verbatim where they apply.
 
-Reference repo's own CLAUDE.md (full architecture and file map) is at `reference-repos/ncbi_ai_agents/CLAUDE.md`. Skim it before designing new pipelines.
+Reference repository's own CLAUDE.md (full architecture and file map) is at `reference-repos/ncbi_ai_agents/CLAUDE.md`. Skim it before designing new pipelines.
 
 ---
 
@@ -160,7 +160,7 @@ User-invocable skills (slash commands):
 |-------|---------|-----------|
 | bossman-mode | Autonomous execution with agent teams | `/bossman` |
 | objective-review | Critical feedback, not agreement | `/objective-review` |
-| repo-dive | First-principles analysis of a reference-repos/ repo | `/repo-dive <path>` |
+| repo-dive | First-principles analysis of a reference-repos/ repository | `/repo-dive <path>` |
 | skill-adapt-verify | Verify adapted skill for stale paths and style violations | `/skill-adapt-verify <path>` |
 | ship | Sync docs, commit, push phase branch | `/ship` |
 
