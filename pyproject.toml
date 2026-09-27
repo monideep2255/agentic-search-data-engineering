@@ -1,5 +1,9 @@
 [build-system]
-requires = ["setuptools>=68.0", "wheel"]
+# 77.0.3 is the first setuptools that reads the PEP 639 `license` expression
+# and `license-files` below, so the floor rose from 68.0 with them
+# (2026-09-27, the owner's attribution decision in DECISIONS.md). `wheel` is
+# no longer listed: setuptools has built wheels on its own since 70.1.
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,7 +11,17 @@ name = "agentic-search-data-engineering"
 version = "0.1.0"
 description = "NCBI ETL pipelines (System 1) and BioLink knowledge graph (System 2)"
 requires-python = ">=3.11"
+authors = [{ name = "Monideep Chakraborti" }]
+license = "Apache-2.0"
+# Both travel in every wheel's `dist-info/licenses/`. Apache 2.0 Section 4(d)
+# has every redistribution carry NOTICE, so the wheel is one.
+license-files = ["LICENSE", "NOTICE"]
 # Dependencies managed in requirements.txt. Install with: pip install -r requirements.txt
+
+[project.urls]
+Homepage = "https://github.com/monideep2255/agentic-search-data-engineering"
+Repository = "https://github.com/monideep2255/agentic-search-data-engineering"
+Issues = "https://github.com/monideep2255/agentic-search-data-engineering/issues"
 
 [project.scripts]
 gene-etl = "system_01_data_pipelines.gene.cli:main"

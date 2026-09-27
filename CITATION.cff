@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+type: software
+title: "NCBI data engineering"
+abstract: "ETL pipelines and knowledge graph for 5 NCBI databases. Downloads bulk data from NCBI FTP, parses it, maps it to the BioLink model, validates with LinkML, and loads it into PostgreSQL + Apache AGE. The result is a BioLink-compliant knowledge graph of about 115M nodes and 693M edges, queryable via openCypher, with every node and edge traced back to its NCBI source record."
+authors:
+  - given-names: Monideep
+    family-names: Chakraborti
+repository-code: "https://github.com/monideep2255/agentic-search-data-engineering"
+url: "https://github.com/monideep2255/agentic-search-data-engineering"
+license: Apache-2.0
+version: 0.1.0
+keywords:
+  - NCBI
+  - knowledge graph
+  - BioLink
+  - KGX
+  - Apache AGE
