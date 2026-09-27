@@ -288,7 +288,7 @@ What does NOT fix it:
 
 What does fix it: treat drops as normal and reconnect automatically. With `--partial --inplace` flags, every byte that made it to disk on the receiver side is preserved across rsync invocations, so each new session resumes from the last committed offset. No bytes are lost, no bytes are re-sent.
 
-Fix: `scripts/rsync-retry.sh` in this repo. Bash loop that reinvokes the same rsync command on any non-zero exit code, up to 200 attempts, with a 10 s sleep between attempts. Expect ~60 to 120 iterations for a 144 GB source at ~1.2 GB per session, total wall-clock 4 to 8 hours at home-Wi-Fi speeds.
+Fix: `scripts/rsync-retry.sh` in this repository. Bash loop that reinvokes the same rsync command on any non-zero exit code, up to 200 attempts, with a 10 s sleep between attempts. Expect ~60 to 120 iterations for a 144 GB source at ~1.2 GB per session, total wall-clock 4 to 8 hours at home-Wi-Fi speeds.
 
 ```bash
 while true; do

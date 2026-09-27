@@ -20,7 +20,7 @@ This doc complements [docs/Knowledge_graph_on_server_reference.md](../Knowledge_
 
 ## 1. System overview: what V1 actually is
 
-A BioLink 4.x compliant knowledge graph covering five NCBI source databases: Gene, ClinVar, MedGen, PubMed, and Taxonomy. The graph lives in a single AGE graph called `ncbi_kg` inside one PostgreSQL 15 cluster on a single Hetzner CPX42 VPS. System 3 (a separate repo) connects as a read-only Cypher client. Nothing in this repo writes to the graph after the bulk load.
+A BioLink 4.x compliant knowledge graph covering five NCBI source databases: Gene, ClinVar, MedGen, PubMed, and Taxonomy. The graph lives in a single AGE graph called `ncbi_kg` inside one PostgreSQL 15 cluster on a single Hetzner CPX42 VPS. System 3 (a separate repository) connects as a read-only Cypher client. Nothing in this repository writes to the graph after the bulk load.
 
 ```mermaid
 flowchart LR
@@ -30,7 +30,7 @@ flowchart LR
     KGX["Merged KGX<br/>~144 GB"]
     Loader["System 2: age-load<br/>nodes + edges + indexes"]
     AGE["AGE graph: ncbi_kg<br/>115M nodes + 693M edges"]
-    S3["System 3 client<br/>separate repo"]
+    S3["System 3 client<br/>separate repository"]
 
     NCBI --> S1 --> Merge --> KGX --> Loader --> AGE
     S3 -->|Cypher| AGE
@@ -294,7 +294,7 @@ PubChem, SRA, dbGaP are excluded. SRA is raw sequencing reads (analysis pipeline
 
 Layer 2 enrichment data (variant annotations from third-party tools, expression data, drug bindings) is excluded. That data is meant to be fetched on demand by System 3 and joined at query time, not pre-ingested. See [docs/architecture/Three_layer_data_architecture.md](Three_layer_data_architecture.md).
 
-System 3 components (FastAPI, LangGraph, UI, MCP servers, channel integrations) are not in this repo and not on this server. They live in a separate repository and connect to this graph as a Cypher client.
+System 3 components (FastAPI, LangGraph, UI, MCP servers, channel integrations) are not in this repository and not on this server. They live in a separate repository and connect to this graph as a Cypher client.
 
 Variant-to-disease causal edges (`biolink:causes`) are not yet in V1. The PoC graph carried these but the V1 ETL does not yet emit them. Filed as a Phase-2 followup.
 

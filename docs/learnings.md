@@ -562,7 +562,7 @@ The actual chain of evidence that the merged KGX is BioLink compliant:
 | 4 | Decision row 53 added required slots to `EDGE_REQUIRED_COLUMNS` and `Association.slot_usage` | Schema and exporter agree on what BioLink 4.x requires | 2026-04-16 |
 | 5 | Gate 2 awk-verified all 693M edges have NF=8, 0 empty `knowledge_level` or `agent_type` | Structural integrity of the merged KGX on the laptop | 2026-04-17 |
 | 6 | rsync per-block checksums confirm byte-perfect transfer to VPS | Bytes on VPS = bytes on laptop | 2026-04-20 17:38 |
-| 7 | On-VPS awk confirmed structural integrity of edges.tsv (693,295,991 rows, all NF=8, 0 empty `knowledge_level`, 0 empty `agent_type`); flagged 64,882 mismatched rows (~0.056%) on nodes.tsv (header NF=18, 115,399,504 of 115,464,386 rows match) | Edges are perfect; nodes have a small structural anomaly that needs investigation before age-load. Most likely cause: tab characters embedded in node `name` or `description` fields (PubMed article titles, gene descriptions) splitting a single logical row into multiple TSV rows from awk's perspective. This is a TSV serialization issue, not a BioLink compliance issue. Python `csv` module with proper TSV dialect handling may parse these correctly even though awk does not. Investigation steps documented in `NEXT_STEPS.md` at repo root. | 2026-04-20 ~20:25 |
+| 7 | On-VPS awk confirmed structural integrity of edges.tsv (693,295,991 rows, all NF=8, 0 empty `knowledge_level`, 0 empty `agent_type`); flagged 64,882 mismatched rows (~0.056%) on nodes.tsv (header NF=18, 115,399,504 of 115,464,386 rows match) | Edges are perfect; nodes have a small structural anomaly that needs investigation before age-load. Most likely cause: tab characters embedded in node `name` or `description` fields (PubMed article titles, gene descriptions) splitting a single logical row into multiple TSV rows from awk's perspective. This is a TSV serialization issue, not a BioLink compliance issue. Python `csv` module with proper TSV dialect handling may parse these correctly even though awk does not. Investigation steps documented in `NEXT_STEPS.md` at repository root. | 2026-04-20 ~20:25 |
 
 Items 1-4 are the actual BioLink compliance proofs. They all happened on the laptop before transfer. Items 5, 6, 7 confirm the data on the VPS is structurally identical to the data that was validated.
 
@@ -973,7 +973,7 @@ Lesson: in any transfer log, compute actual throughput from byte deltas. The pro
 Everything except the actual data transfer was complete and verified by the end of the first hour:
 
 - Phase branch `phase/4.0-cloud-deploy` created off clean `main`
-- Apache PGDG apt repo added, PostgreSQL 15.17 installed (`pg_config --version` confirms, `systemctl is-active postgresql` returns active)
+- Apache PGDG apt repository added, PostgreSQL 15.17 installed (`pg_config --version` confirms, `systemctl is-active postgresql` returns active)
 - Apache AGE 1.5.0 built from source against Postgres 15 dev headers, `age.so` installed at `/usr/lib/postgresql/15/lib/`
 - `ncbi_kg` database created, `age` extension loaded (version 1.5.0), graph `ncbi_kg` created (graphid 16969), confirmed via `SELECT * FROM ag_catalog.ag_graph`
 - `/root/data/kgx/merged/` directory pre-created on VPS (285 GB free, 301 GB total; the "320 GB" in the Hetzner CPX42 spec is decimal GB, and binary GiB after filesystem overhead is 301)
@@ -1635,7 +1635,7 @@ This means no cloud backup of KGX files is needed. The graph database is the aut
 
 ### Understanding: deployment cost for the full system
 
-Layer 1 (knowledge graph) is the only component that needs hosting. Layers 2 and 3 call free external APIs (NCBI ELink/EFetch, PubTator3, LitVar2, ClinicalTrials.gov) at query time. System 3 (search agent, UI) lives in a separate repo with its own hosting.
+Layer 1 (knowledge graph) is the only component that needs hosting. Layers 2 and 3 call free external APIs (NCBI ELink/EFetch, PubTator3, LitVar2, ClinicalTrials.gov) at query time. System 3 (search agent, UI) lives in a separate repository with its own hosting.
 
 Estimated cost for the full system:
 - Layer 1 AGE database (Hetzner CPX42, Nuremberg, no volume): ~$34/month

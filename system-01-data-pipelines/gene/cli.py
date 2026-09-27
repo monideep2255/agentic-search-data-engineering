@@ -67,7 +67,7 @@ def main(tax_id: int | None, skip_download: bool, force_download: bool) -> None:
     and writes nodes.tsv and edges.tsv to the configured KGX output directory.
 
     Configuration is loaded from environment variables (or .env file at the
-    repo root). At minimum, NCBI_EMAIL must be set.
+    repository root). At minimum, NCBI_EMAIL must be set.
     """
     try:
         config = PipelineConfig.from_env()
