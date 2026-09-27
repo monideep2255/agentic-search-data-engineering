@@ -363,9 +363,10 @@ Since 2026-09-27 this repository follows System 3's release cadence (DECISIONS.m
 
 1. Phase and fix branches merge into `develop` through a pull request.
 2. When `develop` is ready to release, cut `release/<version>` from it and open a pull request into `production`.
-3. The owner merges it. The push to `production` fires `.github/workflows/release.yml`.
+3. The owner merges it with a merge commit, never squash and never rebase: the workflow reads the Conventional Commit subjects the merge brings in, and a squash merge replaces them with the pull request's one title, so the version and the notes come out wrong (System 3's finding F-REL-A02). The push to `production` fires `.github/workflows/release.yml`.
 4. The workflow derives the next version from the Conventional Commits since the last `vN.N.N` tag, tags `production`'s tip with it, publishes a GitHub Release with the new changelog section as its notes, and opens a `chore/back-merge-<version>` pull request carrying the changelog commit into `develop`.
 5. Merge the back-merge pull request with a merge commit before cutting the next release branch.
+6. If the workflow fails part way, re-run it. The back-merge branch, with the changelog, is pushed before the tag, and a re-run creates only what is still missing: the tag, the GitHub Release or the pull request, never a second of any (finding F-REL-A04).
 
 The release workflow never pushes to `production`: only the owner's account changes `develop` and `production`, and neither may be force-pushed or deleted. Other people fork the repository and open pull requests.
 
