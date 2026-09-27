@@ -369,6 +369,21 @@ Since 2026-09-27 this repository follows System 3's release cadence (DECISIONS.m
 
 The release workflow never pushes to `production`: only the owner's account changes `develop` and `production`, and neither may be force-pushed or deleted. Other people fork the repository and open pull requests.
 
+#### The first release, v1.0.0, by hand
+
+The first release is v1.0.0, tagged and published by hand rather than by the workflow (DECISIONS.md, 2026-09-27). The workflow would call it v0.0.1, since no commit before the adoption of Conventional Commits is a `feat`. The order below is what makes the workflow release nothing on the push that creates `production` (finding F-REL-A06):
+
+1. Tag the exact commit `production` will be created from, as an annotated tag: `git tag -a v1.0.0 <commit> -m "Release v1.0.0"`.
+2. Push the tag, BEFORE `production` exists: `git push origin refs/tags/v1.0.0`.
+3. Create `production` at that same commit and push it. The push fires the workflow, which finds a tag the owner made on `production`'s tip and releases nothing.
+4. Publish the v1.0.0 GitHub Release by hand, with the short hand-written notes.
+
+Each departure from that order publishes a second, wrong release, measured against the ported scripts:
+
+- `production` pushed before the tag: the workflow runs with no tag to find and publishes v0.0.1 from the whole history.
+- The tag behind `production`'s tip: the workflow publishes a release of the commits between them, measured as v1.0.1 with the tag one commit behind.
+- The tag on a commit that is not on `production` at all: the workflow publishes a first release from the whole history, beside v1.0.0.
+
 ### Parallel phases (1.2 + 1.3 + 1.4)
 
 The original plan called for three separate branches, but in practice these were combined into a single branch (`phase/1.2-1.4-core-triangle-etl`) since all three pipelines touch different directories with no conflicts. One PR, one merge. Faster to review and ship.
