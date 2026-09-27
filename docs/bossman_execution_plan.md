@@ -2,7 +2,7 @@
 
 Phase-by-phase implementation plan for the 5 NCBI ETL pipelines. Each phase is one bossman session with integrated skill chain and branch+MR workflow. Use `/bossman-mode --phase N` to execute.
 
-Created: 2026-04-13. Last updated: 2026-04-22 (Phase 4.0 + Gate 3 PASSED. 5-database AGE graph live on Hetzner CPX42: 115,406,761 nodes + 693,295,991 edges. All 7 Cypher smoke queries return correct results in milliseconds to seconds. Post-load tuning pass added on top of the loader's original Step 8: GIN indexes on properties, unique B-tree on the graphid id column, B-tree on start_id and end_id for every edge label, ANALYZE on every table, and postgresql.conf tuned for the 16 GB box. Loader's `index_builder.py` updated so future deploys do all four index passes + ANALYZE automatically. V1 complete. Merged to main as commit `de43914` 2026-04-22).
+Created: 2026-04-13. Last updated: 2026-09-27 (the default branch is `develop`, renamed from `main`, and releases go through `production`: see "Release flow" under Branch + MR workflow). Before that, 2026-04-22 (Phase 4.0 + Gate 3 PASSED. 5-database AGE graph live on Hetzner CPX42: 115,406,761 nodes + 693,295,991 edges. All 7 Cypher smoke queries return correct results in milliseconds to seconds. Post-load tuning pass added on top of the loader's original Step 8: GIN indexes on properties, unique B-tree on the graphid id column, B-tree on start_id and end_id for every edge label, ANALYZE on every table, and postgresql.conf tuned for the 16 GB box. Loader's `index_builder.py` updated so future deploys do all four index passes + ANALYZE automatically. V1 complete. Merged to main as commit `de43914` 2026-04-22).
 
 ## Table of contents
 
@@ -275,7 +275,7 @@ PHASE START
   |
   +-- best-practices         session checklist (venv, postgres, CLAUDE.md, git status)
   +-- architecture-patterns   read before designing new modules
-  +-- git branch              create phase/N.M-description from main
+  +-- git branch              create phase/N.M-description from develop
   |
 DEVELOPMENT (bossman autonomous execution)
   |
@@ -303,7 +303,7 @@ PHASE END
 MR REVIEW
   |
   +-- user reviews and approves MR
-  +-- merge into main
+  +-- merge into develop
   +-- delete phase branch
   +-- proceed to next phase
 ```
@@ -346,16 +346,28 @@ MR REVIEW
 ### Per-phase git flow
 
 ```
-1. git checkout main && git pull origin main
+1. git checkout develop && git pull origin develop
 2. git checkout -b phase/N.M-description
 3. [bossman builds, commits within branch]
 4. qa-gate passes
 5. git push -u origin phase/N.M-description
-6. gh pr create
+6. gh pr create --base develop
 7. user reviews MR
-8. merge into main, delete branch
-9. start next phase from updated main
+8. merge into develop, delete branch
+9. start next phase from updated develop
 ```
+
+### Release flow
+
+Since 2026-09-27 this repository follows System 3's release cadence (DECISIONS.md, 2026-09-27). The default branch is `develop`, renamed from `main`, and commit subjects follow Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:` and the rest).
+
+1. Phase and fix branches merge into `develop` through a pull request.
+2. When `develop` is ready to release, cut `release/<version>` from it and open a pull request into `production`.
+3. The owner merges it. The push to `production` fires `.github/workflows/release.yml`.
+4. The workflow derives the next version from the Conventional Commits since the last `vN.N.N` tag, tags `production`'s tip with it, publishes a GitHub Release with the new changelog section as its notes, and opens a `chore/back-merge-<version>` pull request carrying the changelog commit into `develop`.
+5. Merge the back-merge pull request with a merge commit before cutting the next release branch.
+
+The release workflow never pushes to `production`: only the owner's account changes `develop` and `production`, and neither may be force-pushed or deleted. Other people fork the repository and open pull requests.
 
 ### Parallel phases (1.2 + 1.3 + 1.4)
 
