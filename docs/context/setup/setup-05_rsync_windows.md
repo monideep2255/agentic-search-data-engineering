@@ -110,7 +110,7 @@ How to open PowerShell:
 2. Type `powershell`
 3. Press Enter
 
-A blue-ish window opens with a prompt that looks like `PS C:\Users\you>`. The `PS` at the start confirms you are in PowerShell. That is the only signal you need.
+A blue-ish window opens with a prompt that looks like `PS C:\Users\<user>>`. The `PS` at the start confirms you are in PowerShell. That is the only signal you need.
 
 One important habit: when a command asks you to install something that changes the PATH (like Scoop), close the PowerShell window completely and open a fresh one. PATH updates do not apply to sessions that were already open when the change happened.
 
@@ -185,7 +185,7 @@ These are not hypothetical. Every one of these bit us during the real setup on 2
 
 Gotcha 1: Windows paths break rsync's argument parser.
 
-rsync uses the colon character to separate host from path, as in `host:/remote/path`. When you pass `C:/Users/...` it reads `C` as a hostname. You get this error:
+rsync uses the colon character to separate host from path, as in `host:/remote/path`. When you pass `C:/Users/<user>` it reads `C` as a hostname. You get this error:
 
 ```
 The source and destination cannot both be remote.
@@ -241,7 +241,7 @@ The source and destination cannot both be remote.
 rsync error: syntax or usage error (code 1)
 ```
 
-Root cause: Git Bash ships with an MSYS runtime that auto-translates POSIX-looking paths into Windows paths when calling native Windows executables. So the `/cygdrive/c/Users/...` string gets rewritten to `C:\Users\...` before cwRsync.exe sees it. cwRsync then parses the `C:` as a remote host prefix, concludes both source and destination are remote, and aborts. PowerShell has no such translation layer, so the exact same command works there.
+Root cause: Git Bash ships with an MSYS runtime that auto-translates POSIX-looking paths into Windows paths when calling native Windows executables. So the `/cygdrive/c/Users/<user>` string gets rewritten to `C:\Users\<user>` before cwRsync.exe sees it. cwRsync then parses the `C:` as a remote host prefix, concludes both source and destination are remote, and aborts. PowerShell has no such translation layer, so the exact same command works there.
 
 Fix: prefix the rsync command with `MSYS_NO_PATHCONV=1` to disable MSYS path translation for that one invocation.
 

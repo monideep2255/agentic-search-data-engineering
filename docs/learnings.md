@@ -305,7 +305,7 @@ The source and destination cannot both be remote.
 rsync error: syntax or usage error (code 1)
 ```
 
-Root cause: Git Bash's MSYS runtime auto-translates POSIX-looking paths into Windows paths when calling native Windows executables. So `/cygdrive/c/Users/...` gets rewritten to `C:\Users\...` before cwRsync.exe sees it. cwRsync then parses the `C:` as a remote host prefix, concludes both source and dest are remote, and aborts. Setup-05 was captured from PowerShell, which has no such path-translation layer, so the gotcha only appears when rsync is invoked from Git Bash or similar MSYS shells.
+Root cause: Git Bash's MSYS runtime auto-translates POSIX-looking paths into Windows paths when calling native Windows executables. So `/cygdrive/c/Users/<user>` gets rewritten to `C:\Users\<user>` before cwRsync.exe sees it. cwRsync then parses the `C:` as a remote host prefix, concludes both source and dest are remote, and aborts. Setup-05 was captured from PowerShell, which has no such path-translation layer, so the gotcha only appears when rsync is invoked from Git Bash or similar MSYS shells.
 
 Fix: prefix the rsync command with `MSYS_NO_PATHCONV=1` to disable MSYS path translation for that invocation. The `/cygdrive/c/...` string then reaches cwRsync unmodified.
 
@@ -994,7 +994,7 @@ Three compounding problems blocked the rsync dry-run from the work laptop to the
 
 ### Problem 1: Windows C:/ paths misread as a remote host
 
-`rsync --dry-run -avP "C:/Users/.../merged/" root@host:/tmp/test/` fails with `The source and destination cannot both be remote`. rsync uses `:` as the host/path separator, so `C:` looks like a hostname.
+`rsync --dry-run -avP "C:/Users/<user>/merged/" root@host:/tmp/test/` fails with `The source and destination cannot both be remote`. rsync uses `:` as the host/path separator, so `C:` looks like a hostname.
 
 Fix: use the Cygwin-style path format that cwRsync expects. `C:/Users/<you>/...` becomes `/cygdrive/c/Users/<you>/...`.
 
