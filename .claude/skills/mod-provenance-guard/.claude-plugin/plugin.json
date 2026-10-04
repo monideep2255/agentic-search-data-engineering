@@ -1,0 +1,6 @@
+{
+  "name": "mod-provenance-guard",
+  "version": "1.0.0",
+  "description": "Warns after an edit to a pipeline Python file removes a source or source_url assignment, or adds one inside the merge code, so provenance is never dropped or rewritten downstream. Never blocks. Trigger: Auto",
+  "author": { "name": "Monideep Chakraborti" }
+}
