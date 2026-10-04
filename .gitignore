@@ -60,6 +60,14 @@ neo4j/import/
 # the negation below.
 .claude/*
 !.claude/settings.json
+# Agent mods are hook-capable for the same reason: a plugin folder under
+# .claude/skills/ runs code on session start. Track the mod-* folders so every
+# change to one surfaces as a diff and goes through review. The other skills
+# stay local. The engine regenerates .claude-plugin/types/ on every load.
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/mod-*/
+.claude/skills/mod-*/.claude-plugin/types/
 .codex/
 *.swp
 *.swo
