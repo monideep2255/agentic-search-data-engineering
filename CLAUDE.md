@@ -163,6 +163,7 @@ User-invocable skills (slash commands):
 | repo-dive | First-principles analysis of a reference-repos/ repository | `/repo-dive <path>` |
 | skill-adapt-verify | Verify adapted skill for stale paths and style violations | `/skill-adapt-verify <path>` |
 | ship | Sync docs, commit, push phase branch | `/ship` |
+| agent mods | Hook plugins under `.claude/skills/mod-*` that load on their own: guards, status lines, pipeline previews. Guide: `docs/Agent_mods.md` | `/mods` lists them |
 
 Auto-read skills (loaded by other skills or before specific tasks): best-practices, qa-gate, release-workflow, visualization-standards, architecture-patterns, documentation-standards, python-code-standards, testing-standards, eval-harness.
 

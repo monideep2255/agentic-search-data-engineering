@@ -101,6 +101,7 @@ python system-01-data-pipelines/gene/pipeline.py
 
 | Doc | What it covers |
 |-----|---------------|
+| [Agent mods guide](docs/Agent_mods.md) | Every agent mod, how it starts, what it blocks, and how to turn one off |
 | [Project overview A to Z](docs/Project_overview_A_to_Z.md) | Single-source-of-truth navigation hub for everything in this repository |
 | [Execution plan](docs/bossman_execution_plan.md) | Phase-by-phase build plan with status, gates, validation checklist, disk budget |
 | [Three-layer architecture](docs/architecture/Three_layer_data_architecture.md) | Layer 1 (graph), Layer 2 (on-demand API), Layer 3 (enrichment), cost breakdown |
