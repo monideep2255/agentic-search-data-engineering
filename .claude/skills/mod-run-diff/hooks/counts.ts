@@ -91,8 +91,8 @@ export function entryFrom(command: string, entries: readonly string[]): string |
 }
 
 /** Compares a run with the previous run of the same entry point. */
-export function compare(entry: string, before: Counts | undefined, after: Counts, thresholdPercent: number): Comparison {
-  if (before === undefined) return { entry, isBaseline: true, thresholdPercent, changes: [], flaggedCount: 0 }
+export function compare(entry: string, before: Counts | undefined, after: Counts, thresholdPercent: number, baselineAt: number | null = null): Comparison {
+  if (before === undefined) return { entry, isBaseline: true, baselineAt, thresholdPercent, changes: [], flaggedCount: 0 }
   const keys = new Set([...Object.keys(before), ...Object.keys(after)])
   const changes: Change[] = []
   for (const key of keys) {
@@ -122,7 +122,7 @@ export function compare(entry: string, before: Counts | undefined, after: Counts
     changes.push({ key, kind, before: from, after: to, dropPercent, isFlagged, reason })
   }
   changes.sort((x, y) => Number(y.isFlagged) - Number(x.isFlagged) || Math.abs((y.after ?? 0) - (y.before ?? 0)) - Math.abs((x.after ?? 0) - (x.before ?? 0)))
-  return { entry, isBaseline: false, thresholdPercent, changes, flaggedCount: changes.filter(c => c.isFlagged).length }
+  return { entry, isBaseline: false, baselineAt, thresholdPercent, changes, flaggedCount: changes.filter(c => c.isFlagged).length }
 }
 
 /** Counts of the right shape from whatever the store held, or undefined. */
@@ -131,4 +131,12 @@ export function asCounts(value: unknown): Counts | undefined {
   const out: Counts = {}
   for (const [k, v] of Object.entries(value)) if (typeof v === 'number' && Number.isFinite(v)) out[k] = v
   return out
+}
+
+/** "2026-10-04" from milliseconds, or "an unknown date". */
+export function dayOf(ms: number | null): string {
+  if (ms === null || !Number.isFinite(ms)) return 'an unknown date'
+  const d = new Date(ms)
+  const p = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`
 }

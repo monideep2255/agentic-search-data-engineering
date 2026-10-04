@@ -72,6 +72,34 @@ test('requirements-file and editable installs pass without a question', async ($
   expect(seen.urls.length).toBe(0)
 })
 
+test('option values are not read as packages, and a bare number or word value never asks', async ($, on) => {
+  const seen = fake($, on)
+  for (const c of ['pip install --timeout 30 --retries 3 --progress-bar off -r requirements.txt', 'pip install --retries 3 -e .']) {
+    expect((await bash($, c)).deny).toBeUndefined()
+  }
+  expect(seen.questions.length).toBe(0)
+  expect(seen.urls.length).toBe(0)
+})
+
+test('a package beside value options is still named', async ($, on) => {
+  const seen = fake($, on)
+  await bash($, 'pip install --timeout 30 --progress-bar off requests')
+  expect(seen.questions.length).toBe(1)
+  expect(seen.questions[0]).toContain('requests')
+  expect(seen.questions[0]).not.toContain('"30"')
+  expect(seen.urls).toEqual([URL('requests')])
+})
+
+test('upgrading pip, setuptools or wheel unpinned does not ask, a pinned one does', async ($, on) => {
+  const seen = fake($, on)
+  expect((await bash($, 'pip install --upgrade pip')).deny).toBeUndefined()
+  expect((await bash($, 'python3 -m pip install --upgrade pip setuptools wheel')).deny).toBeUndefined()
+  expect(seen.questions.length).toBe(0)
+  await bash($, 'pip install pip==24.0')
+  expect(seen.questions.length).toBe(1)
+  expect(seen.questions[0]).toContain('pip')
+})
+
 test('a pinned package fetches the version page too', async ($, on) => {
   const seen = fake($, on, {
     pypi: {

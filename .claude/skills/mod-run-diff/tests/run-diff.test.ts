@@ -27,10 +27,11 @@ function reportOf(gene: number, mentioned: number, dangling: number) {
   return `# 5-database merge report\n\n## Summary\n- Total nodes: 1,000\n- Dangling endpoints (resolved via stubs): ${dangling}\n- Validation passed: True\n- Missing provenance on nodes: 5 (stubs count here)\n\n## Node categories\n- biolink:Gene: ${gene}\n\n## Edge predicates\n- biolink:mentioned_in: ${mentioned}\n`
 }
 
-type World = { toasts: string[]; store: Map<string, unknown>; report: { text: string | undefined } }
+type World = { toasts: string[]; store: Map<string, unknown>; report: { text: string | undefined }; now: number }
 
 function world(on: any, reportText?: string): World {
-  const w: World = { toasts: [], store: new Map(), report: { text: reportText } }
+  const w: World = { toasts: [], store: new Map(), report: { text: reportText }, now: new Date(2026, 9, 4, 12).getTime() }
+  on('clock.now', () => ({ value: w.now }))
   on('fs.read', (_: unknown, e: any) => {
     if (String(e.path).endsWith('pyproject.toml')) return { value: TOML }
     if (w.report.text !== undefined) return { value: w.report.text }
@@ -92,10 +93,10 @@ test('a first run stores the baseline and never says clean', async ($, on) => {
   on('tool.call', () => out(MERGE_LOG))
   await $.tool.call({ tool: 'Bash', command: 'merge-etl' })
   expect(w.toasts.join('\n')).toContain('no baseline yet')
-  expect(w.toasts.join('\n')).toContain('stored this run as the baseline')
+  expect(w.toasts.join('\n')).toContain('stored this run as the pinned baseline')
   expect(w.toasts.join('\n')).not.toContain('clean')
   const r = await $.command.run({ command: 'rundiff', args: '' })
-  expect(r.text).toContain('no baseline yet')
+  expect(r.text).toContain('baseline pinned 2026-10-04')
 })
 
 test('a ten percent drop on the second run is flagged and shown', async ($, on) => {
@@ -178,4 +179,56 @@ test('rundiff before any run says so', async ($, on) => {
   world(on)
   const r = await $.command.run({ command: 'rundiff', args: '' })
   expect(r.text).toBe('No pipeline run has been seen yet')
+})
+
+const run = ($: any) => $.tool.call({ tool: 'Bash', command: 'merge-etl' })
+const baselineOf = (w: World) => (w.store.get('baseline:merge-etl') as Record<string, number>)['biolink:Gene']
+
+test('pinned baseline: first run pins, a drop flags without moving it, a third run still flags', async ($, on) => {
+  const w = world(on, reportOf(1000, 50, 7))
+  on('tool.call', () => out(MERGE_LOG))
+  await run($)
+  expect(baselineOf(w)).toBe(1000)
+  w.report.text = reportOf(900, 50, 7)
+  w.toasts.length = 0
+  await run($)
+  expect(w.toasts.join('\n')).toContain('1 flagged')
+  expect(baselineOf(w)).toBe(1000)
+  w.report.text = reportOf(920, 50, 7)
+  w.toasts.length = 0
+  await run($)
+  expect(w.toasts.join('\n')).toContain('1 flagged')
+  expect(baselineOf(w)).toBe(1000)
+})
+
+test('accept moves the baseline and the same counts are then clean', async ($, on) => {
+  const w = world(on, reportOf(1000, 50, 7))
+  on('tool.call', () => out(MERGE_LOG))
+  await run($)
+  w.report.text = reportOf(900, 50, 7)
+  await run($)
+  w.now = new Date(2026, 9, 6, 12).getTime()
+  const r = await $.command.run({ command: 'rundiff', args: 'accept' })
+  expect(r.text).toContain('baseline replaced')
+  expect(r.text).toContain('2026-10-06')
+  expect(baselineOf(w)).toBe(900)
+  w.toasts.length = 0
+  await run($)
+  expect(w.toasts.join('\n')).toContain('0 changes, 0 flagged')
+})
+
+test('/rundiff shows the last comparison and the baseline date', async ($, on) => {
+  const w = world(on, reportOf(1000, 50, 7))
+  on('tool.call', () => out(MERGE_LOG))
+  await run($)
+  w.report.text = reportOf(900, 50, 7)
+  await run($)
+  const r = await $.command.run({ command: 'rundiff', args: '' })
+  expect(r.text).toContain('1 flagged against the baseline of 2026-10-04')
+})
+
+test('accept before any run says there is nothing to accept', async ($, on) => {
+  world(on)
+  const r = await $.command.run({ command: 'rundiff', args: 'accept' })
+  expect(r.text).toContain('nothing to accept')
 })

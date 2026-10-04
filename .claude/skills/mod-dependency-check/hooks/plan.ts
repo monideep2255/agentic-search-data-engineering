@@ -9,7 +9,13 @@ const VALUE_FLAGS = new Set([
   '-r', '--requirement', '-e', '--editable', '-c', '--constraint', '-i', '--index-url', '--extra-index-url',
   '-f', '--find-links', '-t', '--target', '--python', '--prefix', '--root', '--group', '-G', '--extra',
   '--platform', '--python-version', '--implementation', '--abi', '--src', '--cache-dir', '--index', '--default-index',
+  '--timeout', '--retries', '--resume-retries', '--progress-bar', '--proxy', '--trusted-host', '--cert', '--client-cert',
+  '--exists-action', '--log', '--upgrade-strategy', '--use-feature', '--use-deprecated', '--root-user-action',
+  '--no-binary', '--only-binary', '--config-settings', '-C', '--global-option', '--report', '--keyring-provider',
 ])
+
+// Tooling that is upgraded in place and not a dependency the project chooses, so an unpinned mention does not ask.
+const TOOLING = new Set(['pip', 'setuptools', 'wheel'])
 
 const NAME = /^[A-Za-z0-9][A-Za-z0-9._-]*/
 
@@ -20,6 +26,7 @@ export function parseSpec(raw: string): Requested | undefined {
   const m = s.match(NAME)
   if (!m) return undefined
   const name = m[0]
+  if (!/[A-Za-z]/.test(name)) return undefined
   s = s.slice(name.length).replace(/^\[[^\]]*\]/, '').trim().replace(/^@\s*/, '')
   const pin = s.match(/^===?\s*([0-9][^\s,*]*)$/)
   return { name, spec: s, pinned: pin ? pin[1] : undefined }
@@ -49,7 +56,7 @@ export function fromCommand(command: string): Requested[] {
         continue
       }
       const r = parseSpec(w)
-      if (r) out.push(r)
+      if (r && !(TOOLING.has(r.name.toLowerCase()) && r.pinned === undefined)) out.push(r)
     }
   }
   return out

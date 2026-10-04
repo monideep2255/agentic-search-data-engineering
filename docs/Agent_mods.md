@@ -27,13 +27,14 @@ The mod folders are tracked in git through a narrow `.gitignore` exception, so a
 
 ## The mods
 
-Fourteen mods: six shared with the other agentic search repositories, and eight built for this repository.
+Fifteen mods: seven shared with the other agentic search repositories, and eight built for this repository. The standing context figures behind mod-context-budget are in [Context budget](Context_budget.md).
 
 ### Shared (in all three repositories)
 
 | Mod | What it does | How it starts | What it blocks | Notes |
 |-----|--------------|---------------|----------------|-------|
 | mod-blast-radius | Dry-runs a risky Bash command, shows what it would touch in a pane, and asks before it runs | Auto, then asks Proceed or Cancel | A risky command until you press Proceed: recursive or forced delete, `find -delete`, destructive git commands, migrations, `psql` with DROP or TRUNCATE | Extra rules here: `ssh` to a remote host, `age-load`, `psql` with write Cypher or DELETE FROM, and the knowledge graph loader command line |
+| mod-context-budget | Observer with zero standing tokens. At session start it totals the standing context (instruction files, skills listing, agents, MCP tools) and compares it with a budget | Auto, and `/context-budget` | Nothing | Toasts and sets the status line when over budget. `/context-budget` lists every instruction file with its tokens. Budget is 13,900 tokens, set in `hooks/config.ts`. See [Context budget](Context_budget.md) |
 | mod-context-weather | Shows context fullness as a weather band above the prompt, with a sparkline, last-turn change, and cache warmth. Nudges you to compact when you step away while the cache is warm | Auto, and `/precompact` | Nothing | Cache window is 5 minutes here, and the nudge fires after 4 idle minutes above 60,000 tokens |
 | mod-help | Lists the installed mods, warns when an unknown plugin auto-loads from `.claude/skills`, and reminds you once a day | `/mods` or `/mods <mod-name>` | Nothing | Points at this guide |
 | mod-public-repo-guard | Guards `git commit` and `git push` in the public repositories | Auto | Skipped hooks (`--no-verify`, `-n`), force pushes, `--all` and `--mirror`, pushes to `production`, `main`, or `develop`, and any commit or push when the leak scanner fails or is missing | The leak scanner is `scripts/check_public_leaks.py`. This repository has no confirm-listed branch, so it never asks |
@@ -56,6 +57,7 @@ Fourteen mods: six shared with the other agentic search repositories, and eight 
 ## Slash commands at a glance
 
 - `/mods`: list every mod with its trigger, or `/mods <mod-name>` for one.
+- `/context-budget`: list every instruction file with its tokens and the budget status.
 - `/replay`: step through the last turn's file edits.
 - `/precompact`: compact the conversation now, while the cache is warm.
 - `/longrun <entry point> [args]`: run a pipeline entry point and stream its progress.
@@ -81,6 +83,7 @@ A guard reads command text. It is a safety net and not a security boundary, beca
 
 ## Known limits
 
+- Context budget: the budget comes from one measurement and counts standing context only. See [Context budget](Context_budget.md).
 - Context weather: cache warmth is an estimate from the cache window setting and the time since the last turn, not a reading from the server.
 - `/precompact`: it compacts on a short timer after it replies, because the engine refuses a compaction started inside the command. If no after count follows, run `/compact`.
 - Replay theater: it does not record notebook edits.
@@ -97,6 +100,6 @@ A guard reads command text. It is a safety net and not a security boundary, beca
 
 ## Maintenance
 
-The six shared mods are maintained in a separate source and copied into this repository. Edit them through that source, not here, or the next copy overwrites the change. The `hooks/config.ts` file in each shared mod holds this repository's own settings and is never overwritten by the copy. The eight mods listed under This repository only are built and edited here.
+The seven shared mods are maintained in a separate source and copied into this repository. Edit them through that source, not here, or the next copy overwrites the change. The `hooks/config.ts` file in each shared mod holds this repository's own settings and is never overwritten by the copy. The eight mods listed under This repository only are built and edited here.
 
 Each mod must pass `claude plugin validate` and `claude plugin test` before it is committed.
