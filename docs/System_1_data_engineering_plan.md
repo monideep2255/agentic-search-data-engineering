@@ -26,7 +26,7 @@ What we are building, why, and how. Crystallized from the April 2 brainstorming 
 - [Shared utilities (reusable across all pipelines)](#shared-utilities-reusable-across-all-pipelines)
 - [Risk signals and fallback plans](#risk-signals-and-fallback-plans)
 - [Wall-clock time (things that take real time regardless of coding speed)](#wall-clock-time-things-that-take-real-time-regardless-of-coding-speed)
-- [Lessons from Anne's glucose metabolism KG pipeline](#lessons-from-annes-glucose-metabolism-kg-pipeline)
+- [Lessons from a reference glucose metabolism KG pipeline](#lessons-from-a-reference-glucose-metabolism-kg-pipeline)
 - [Architecture diagram checklist](#architecture-diagram-checklist)
 - [Decisions made during April 5 architecture review](#decisions-made-during-april-5-architecture-review)
 
@@ -637,13 +637,13 @@ Build these shared utilities during the first pipeline (Gene), then reuse for al
 
 Plan around these. PubMed baseline download is the longest single operation. Run it overnight.
 
-## Lessons from Anne's glucose metabolism KG pipeline
+## Lessons from a reference glucose metabolism KG pipeline
 
-Anne built a working BioLink-compliant KG pipeline for glucose metabolism (82,517 nodes, 263,408 edges). Code is at `NIH/KG/Use-case-WG/PoC/Pipeline/`. Her 9-step pipeline follows the same pattern as our plan (fetch, parse, map to BioLink, merge, validate, export). Key lessons to adopt:
+A reference project built a working BioLink-compliant KG pipeline for glucose metabolism (82,517 nodes, 263,408 edges). Its code is not published. Its 9-step pipeline follows the same pattern as our plan (fetch, parse, map to BioLink, merge, validate, export). Key lessons to adopt:
 
 ### Adopt directly
 
-1. Validation checklist from her assembly step. Six concrete checks, all must be zero:
+1. Validation checklist from its assembly step. Six concrete checks, all must be zero:
    - Duplicate node IDs: 0
    - Duplicate edges (subject + predicate + object): 0
    - Dangling edge subjects: 0
@@ -651,19 +651,19 @@ Anne built a working BioLink-compliant KG pipeline for glucose metabolism (82,51
    - Add our own: nodes without source_url: 0
    - Add our own: edges without provenance properties: 0
 
-2. Pip-installable package with CLI. Her pipeline is runnable as `glucose-kg build`, `glucose-kg validate`, `glucose-kg info`. Our pipelines should follow the same pattern for each database.
+2. Pip-installable package with CLI. The reference pipeline is runnable as `glucose-kg build`, `glucose-kg validate`, `glucose-kg info`. Our pipelines should follow the same pattern for each database.
 
-3. MONDO OBO as supplementary mapping source. Anne downloads the MONDO OBO file directly for UMLS-to-MONDO mapping, not just relying on MedGen. This catches mappings MedGen might miss.
+3. MONDO OBO as supplementary mapping source. The reference pipeline downloads the MONDO OBO file directly for UMLS-to-MONDO mapping, not just relying on MedGen. This catches mappings MedGen might miss.
 
 ### Adopt in Phase 2
 
-4. MANE v1.5 for protein selection. When Protein enters Phase 2, use MANE Select (one canonical protein per gene) rather than random RefSeq accessions. Anne's approach is the gold standard.
+4. MANE v1.5 for protein selection. When Protein enters Phase 2, use MANE Select (one canonical protein per gene) rather than random RefSeq accessions. The reference pipeline's approach is the gold standard.
 
-5. Reactome pathway integration. Anne added pathway nodes with `participates_in` edges. Consider adding Reactome as a Phase 2 data source for pathway-level queries.
+5. Reactome pathway integration. The reference pipeline added pathway nodes with `participates_in` edges. Consider adding Reactome as a Phase 2 data source for pathway-level queries.
 
 ### Where our plan goes further
 
-| Dimension | Anne's pipeline | Our plan |
+| Dimension | Reference pipeline | Our plan |
 |---|---|---|
 | Scope | Human glucose metabolism (6,709 genes) | All organisms, all databases (94M+ genes) |
 | Literature | None | PubMed (40M articles via gene2pubmed) |
