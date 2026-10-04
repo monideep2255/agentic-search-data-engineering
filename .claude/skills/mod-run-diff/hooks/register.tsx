@@ -2,7 +2,7 @@ import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register } from 'claude-code'
 
 import type { Comparison } from '../types/index.d.ts'
-import { asCounts, compare, entryFrom, parseCounts, parseScripts, reportPathFrom } from './counts.ts'
+import { asCounts, compare, dayOf, entryFrom, parseCounts, parseScripts, reportPathFrom } from './counts.ts'
 import { config } from './config.ts'
 
 const PANE = 'run-diff'
@@ -56,17 +56,39 @@ async function observe($: EngineInterface, entry: string, output: string) {
     $.ui.toast(`${name}: no counts found in the output of ${entry}, so nothing was compared and the baseline is unchanged`)
     return
   }
-  const before = asCounts(await $.store.get(`baseline:${entry}`))
-  const comparison = compare(entry, before, counts, config.dropThresholdPercent)
-  await $.store.set(`baseline:${entry}`, counts)
+  // The baseline is pinned: the first run stores it, later runs compare against it and never overwrite it.
+  const pinned = asCounts(await $.store.get(`baseline:${entry}`))
+  let baselineAt = typeof (await $.store.get(`baselineAt:${entry}`)) === 'number' ? ((await $.store.get(`baselineAt:${entry}`)) as number) : null
+  if (pinned === undefined) {
+    baselineAt = await $.clock.now()
+    await $.store.set(`baseline:${entry}`, counts)
+    await $.store.set(`baselineAt:${entry}`, baselineAt)
+  }
+  const comparison = compare(entry, pinned, counts, config.dropThresholdPercent, baselineAt)
+  await $.store.set(`lastRun:${entry}`, counts)
+  await $.store.set('lastEntry', entry)
   await $.store.set('last', comparison)
   await update($, last, () => comparison)
   if (comparison.isBaseline) {
-    $.ui.toast(`${name}: no baseline yet for ${entry}: stored this run as the baseline`)
+    $.ui.toast(`${name}: no baseline yet for ${entry}: stored this run as the pinned baseline`)
   } else {
-    const hint = comparison.flaggedCount > 0 ? ', see /rundiff' : ''
-    $.ui.toast(`${name}: ${entry}: ${comparison.changes.length} changes, ${comparison.flaggedCount} flagged${hint}`)
+    const hint = comparison.flaggedCount > 0 ? ', see /rundiff, /rundiff accept moves the baseline' : ''
+    $.ui.toast(`${name}: ${entry}: ${comparison.changes.length} changes, ${comparison.flaggedCount} flagged against the baseline of ${dayOf(baselineAt)}${hint}`)
   }
+}
+
+// Replaces the pinned baseline with the last run's counts. Returns the message to show.
+async function accept($: EngineInterface): Promise<string> {
+  const entry = await $.store.get('lastEntry')
+  const counts = typeof entry === 'string' ? asCounts(await $.store.get(`lastRun:${entry}`)) : undefined
+  if (typeof entry !== 'string' || counts === undefined) return 'No pipeline run has been seen yet, so there is nothing to accept'
+  const now = await $.clock.now()
+  await $.store.set(`baseline:${entry}`, counts)
+  await $.store.set(`baselineAt:${entry}`, now)
+  const comparison = compare(entry, counts, counts, config.dropThresholdPercent, now)
+  await $.store.set('last', comparison)
+  await update($, last, () => comparison)
+  return `${entry}: baseline replaced with the last run's counts (${dayOf(now)})`
 }
 
 async function lastComparison($: EngineInterface): Promise<Comparison | null> {
@@ -109,15 +131,20 @@ export const register: Register = on => {
 
   on('session.start', async ($, e, next) => {
     const r = await next(e)
-    await $.command.register({ name: 'rundiff', description: 'Show how the last pipeline run compares with the one before' })
+    await $.command.register({ name: 'rundiff', description: 'Show how the last pipeline run compares with the pinned baseline. Use /rundiff accept to replace the baseline' })
     return r
   })
 
-  on('command.run', { command: 'rundiff' }, async $ => {
+  on('command.run', { command: 'rundiff' }, async ($, e) => {
+    if (String(e.args ?? '').trim() === 'accept') {
+      const text = await accept($)
+      $.ui.toast(text)
+      return { text }
+    }
     const c = await lastComparison($)
     if (c === null) return { text: 'No pipeline run has been seen yet' }
     await openPane($, PANE, 'Run diff', 'mod-run-diff: widen the terminal to see the run diff')
-    return { text: c.isBaseline ? `${c.entry}: no baseline yet, nothing compared` : `${c.entry}: ${c.changes.length} changes, ${c.flaggedCount} flagged` }
+    return { text: c.isBaseline ? `${c.entry}: baseline pinned ${dayOf(c.baselineAt)}, nothing compared` : `${c.entry}: ${c.changes.length} changes, ${c.flaggedCount} flagged against the baseline of ${dayOf(c.baselineAt)}` }
   })
 
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
@@ -130,13 +157,13 @@ export const register: Register = on => {
       <Box flexDirection="column">
         <Text bold>Run diff: {c.entry}</Text>
         {c.isBaseline ? (
-          <Text>No baseline yet: stored this run as the baseline. Nothing was compared.</Text>
+          <Text>Baseline pinned {dayOf(c.baselineAt)}: this run is the baseline. Nothing was compared.</Text>
         ) : (
           <Text>
-            {c.changes.length} changes, {c.flaggedCount} flagged (drop threshold {c.thresholdPercent} percent)
+            {c.changes.length} changes, {c.flaggedCount} flagged against the baseline of {dayOf(c.baselineAt)} (drop threshold {c.thresholdPercent} percent). Run /rundiff accept to replace the baseline.
           </Text>
         )}
-        {!c.isBaseline && c.changes.length === 0 && <Text dimColor>Every reported count matches the previous run.</Text>}
+        {!c.isBaseline && c.changes.length === 0 && <Text dimColor>Every reported count matches the pinned baseline.</Text>}
         {shown.map((x, i) => (
           <Text key={`c${i}`} color={x.isFlagged ? 'red' : undefined} dimColor={!x.isFlagged}>
             {x.isFlagged ? '! ' : '  '}

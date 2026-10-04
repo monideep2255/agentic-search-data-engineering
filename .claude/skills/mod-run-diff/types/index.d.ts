@@ -14,6 +14,8 @@ export type Comparison = {
   entry: string
   /** True when there was no earlier run, so nothing was compared. */
   isBaseline: boolean
+  /** When the pinned baseline was stored or last accepted, in milliseconds. Null when unknown. */
+  baselineAt: number | null
   thresholdPercent: number
   changes: Change[]
   flaggedCount: number

@@ -82,3 +82,24 @@ test('unparseable pytest output changes nothing', async ($, on) => {
   await $.tool.call({ tool: 'Bash', command: 'pytest' })
   expect(s).toEqual([])
 })
+
+test('uv run, poetry run and pipenv run pytest are recognised', async ($, on) => {
+  const s = setup(on, '7 passed in 1.0s\n')
+  for (const c of ['uv run pytest -q', 'poetry run pytest', 'uv run --frozen python -m pytest', 'pipenv run pytest tests/a.py']) {
+    s.length = 0
+    await $.tool.call({ tool: 'Bash', command: c })
+    expect(last(s), c).toBe('tests: 7 passed, 0 failed (full, just now)')
+  }
+})
+
+test('uv run of something that is not pytest records nothing', async ($, on) => {
+  const s = setup(on, '7 passed in 1.0s\n')
+  await $.tool.call({ tool: 'Bash', command: 'uv run ruff check .' })
+  expect(s.length).toBe(0)
+})
+
+test('a run that deselected tests is labelled filtered, not full', async ($, on) => {
+  const s = setup(on, '5 passed, 3 deselected in 1.0s\n')
+  await $.tool.call({ tool: 'Bash', command: 'pytest -k fast' })
+  expect(last(s)).toBe('tests: 5 passed, 0 failed (filtered, just now)')
+})

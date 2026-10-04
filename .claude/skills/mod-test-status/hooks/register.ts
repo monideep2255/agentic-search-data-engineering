@@ -9,7 +9,15 @@ const run = atom({ plugin: 'mod-test-status', key: 'run' } as const, null)
 const lastEditAt = atom({ plugin: 'mod-test-status', key: 'lastEditAt' } as const, null)
 
 // The pytest words of a simple command, or undefined when it is not pytest.
-function pytestArgs(p: string[]): string[] | undefined {
+function pytestArgs(words: string[]): string[] | undefined {
+  // `uv run pytest`, `poetry run pytest` and `pipenv run pytest` run the next word as the program.
+  let p = words
+  if (p.length > 1 && ['uv', 'poetry', 'pipenv'].includes(basename(p[0])) && p[1] === 'run') {
+    let at = 2
+    while (at < p.length && p[at].startsWith('-')) at++
+    p = p.slice(at)
+    if (p.length === 0) return undefined
+  }
   const first = basename(p[0])
   if (first === 'pytest' || first === 'py.test') return p.slice(1)
   if (/^python[\d.]*$/.test(first) && p[1] === '-m' && (p[2] === 'pytest' || p[2] === 'py.test')) return p.slice(3)
@@ -26,7 +34,7 @@ function markerExpression(args: string[]): string | null {
   return null
 }
 
-function parseSummary(text: string): { passed: number; failed: number; skipped: number } | null {
+function parseSummary(text: string): { passed: number; failed: number; skipped: number; deselected: number } | null {
   const lines = text.split('\n').reverse()
   for (const line of lines) {
     if (!/\b(passed|failed|skipped|errors?)\b/.test(line) || !/\bin [\d.]+s\b/.test(line)) continue
@@ -34,7 +42,7 @@ function parseSummary(text: string): { passed: number; failed: number; skipped: 
       const m = line.match(new RegExp(`(\\d+) ${word}\\b`))
       return m ? Number(m[1]) : 0
     }
-    return { passed: count('passed'), failed: count('failed') + count('errors?'), skipped: count('skipped') }
+    return { passed: count('passed'), failed: count('failed') + count('errors?'), skipped: count('skipped'), deselected: count('deselected') }
   }
   return null
 }
@@ -67,7 +75,7 @@ async function render($: EngineInterface) {
   const minutes = Math.max(0, Math.floor(((await $.clock.now()) - r.at) / 60_000))
   const age = minutes < 1 ? 'just now' : `${minutes}m ago`
   const stale = edited !== null && edited > r.at ? ' stale' : ''
-  $.ui.status(`tests: ${r.passed} passed, ${r.failed} failed (${isQuick(r.markers, slow) ? 'quick' : 'full'}, ${age})${stale}`)
+  $.ui.status(`tests: ${r.passed} passed, ${r.failed} failed (${isQuick(r.markers, slow) ? 'quick' : (r.deselected ?? 0) > 0 ? 'filtered' : 'full'}, ${age})${stale}`)
 }
 
 export const register: Register = on => {
