@@ -57,13 +57,13 @@ Files (in order):
 
 Action: read all five. Note any open questions in DECISIONS.md.
 
-### Step 3: review Anne's data pipeline (ncbi-kg reference)
+### Step 3: review the reference data pipeline (ncbi-kg reference)
 
-What: review the data engineering approach from the NLM/NCBI KG pipeline built by Anne's team.
+What: review the data engineering approach from the NLM/NCBI KG reference pipeline.
 
 Why: this is the closest existing implementation to what we're building. Avoids repeating their mistakes and lets us reuse validated patterns directly.
 
-Where: `reference-repos/ncbi_ai_agents/KG/pipeline/src/glucose_metabolism_kg/` (canonical, this is where the working code now lives), also mirrored at `reference-repos/personal-os/NIH/KG/Use-case-WG/PoC/Pipeline/glucose_metabolism_kg_package/`
+Where: `reference-repos/ncbi_ai_agents/KG/pipeline/src/glucose_metabolism_kg/` (canonical, this is where the working code now lives)
 
 Files:
 - `README.md`: pipeline overview
@@ -116,7 +116,7 @@ Decision logging: this repository maintains `DECISIONS.md` as a running log of e
 After completing steps 1-5, stop and ask Monideep the following before writing any code:
 
 1. Which docs/ paths are final? (The CLAUDE.md references subdirs planning/, architecture/, context/, so confirm these match the actual folder structure.)
-2. Are there any pipeline patterns from Anne's code (Step 3) or the ncbi-kg repository (Step 1) that should be copied directly into `data-pipelines/shared/`?
+2. Are there any pipeline patterns from the reference pipeline code (Step 3) or the ncbi-kg repository (Step 1) that should be copied directly into `data-pipelines/shared/`?
 3. Any additional skills or agents from the ncbi_ai_agents `.claude/` (Step 4) that should be ported before starting Phase 1?
 4. Any decisions made since April 6 that need to be added to DECISIONS.md before writing the first pipeline?
 5. Any other context (people, constraints, or access issues) that would change how Phase 1 is executed?
