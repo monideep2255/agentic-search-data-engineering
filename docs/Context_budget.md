@@ -16,8 +16,13 @@ How much a coding agent session carries before you type anything, what was trimm
 
 Every turn resends the standing context. Anything loaded only when needed costs nothing until then.
 
-- Standing (every turn): instruction files (`CLAUDE.md`, `AGENTS.md`, always-on rules), the skills listing, custom agent descriptions, MCP tool lists, MCP server instructions.
+- Every turn: instruction files (`CLAUDE.md` and always-on rules), the skills listing, custom agent descriptions, MCP tool lists, MCP server instructions. `AGENTS.md` is not loaded; the measurement lists only `CLAUDE.md`. The skills listing includes 15 skills synced from the claude.ai account, about 3.4k of the 7.7k skills tokens (measured October 4, 2026).
 - On demand: pointer rules name a longer file in `.claude/rules-reference/`, read only when the task needs it. Path-scoped rules load when a matching file is read. The reference index `docs/Agent_reference_index.md` holds material moved out of the instruction files.
+
+Two account-level settings change the standing set without any change to this repository:
+
+- Synced skills and plugins (Claude Code 2.1.275): a CLI signed in with a claude.ai account loads the skills and plugins enabled on that account. Opt out with `"syncClaudeAiSkills": false` or `"syncClaudeAiPlugins": false` in user settings.
+- Project instructions (Claude Code 2.1.277): a repository with `AGENTS.md` and no `CLAUDE.md` now loads `AGENTS.md`. This repository has both, so only `CLAUDE.md` loads. The `/config` option Project instructions can load both; leave it off, because it would add the whole `AGENTS.md` file to every turn.
 
 ## Before and after
 
@@ -98,3 +103,4 @@ Measured October 4, 2026. The same frozen cases and rubric ran before and after 
 2. Headless versus interactive: the figures come from a headless `/context` call. An interactive session may load more or less.
 3. Local only reference files: `.claude/rules-reference/` is gitignored, so another clone does not have the long rule text. Its pointer rules lead nowhere there.
 4. Eval coverage: the behaviour check covers only its own cases, so it does not show that every trimmed rule still changes behaviour.
+5. Account drift: a skill enabled on the claude.ai account grows the skills listing here with no repository change. When the mod flags an overage, check the `claude.ai sync` rows in `/context` first.
