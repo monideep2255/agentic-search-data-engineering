@@ -16,6 +16,8 @@ This repository has been public since 2026-09-24. Everything committed is world-
 
 The fuller version of these rules is `.claude/rules/public-repository-privacy.md` where that folder is present.
 
+Branch model: phase branches named `phase/N.M-short-description`, one pull request into `develop` after the owner approves, no direct push to `develop` or `production`; `production` moves only by a merged release pull request.
+
 ---
 
 ## Current focus
@@ -83,7 +85,7 @@ Every fact must be clickable back to its NCBI source record. This is the trust m
 ## Where the rest lives
 
 - Reference docs table, canonical reference pipeline, and the data source adapter pattern: `docs/Agent_reference_index.md`. Read it before writing pipeline code or adding a data source.
-- Agent mods: `docs/Agent_mods.md`. Rules: `.claude/rules/` where that folder is present.
+- Agent mods: `docs/Agent_mods.md`. Standing context budget: `docs/Context_budget.md`. Rules: `.claude/rules/` where that folder is present.
 - Log non-trivial decisions to `DECISIONS.md`.
 
 ---
