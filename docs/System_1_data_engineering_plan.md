@@ -17,7 +17,7 @@ What we are building, why, and how. Crystallized from the April 2 brainstorming 
 - [Build order](#build-order)
 - [What "done" looks like for System 1](#what-done-looks-like-for-system-1)
 - [What System 1 does NOT do](#what-system-1-does-not-do)
-- [Repo structure decision](#repo-structure-decision)
+- [Repository structure decision](#repository-structure-decision)
 - [How System 2 connects](#how-system-2-connects)
 - [Graph database options](#graph-database-options)
 - [Validation: how to know System 1 is working](#validation-how-to-know-system-1-is-working)
@@ -26,7 +26,7 @@ What we are building, why, and how. Crystallized from the April 2 brainstorming 
 - [Shared utilities (reusable across all pipelines)](#shared-utilities-reusable-across-all-pipelines)
 - [Risk signals and fallback plans](#risk-signals-and-fallback-plans)
 - [Wall-clock time (things that take real time regardless of coding speed)](#wall-clock-time-things-that-take-real-time-regardless-of-coding-speed)
-- [Lessons from Anne's glucose metabolism KG pipeline](#lessons-from-annes-glucose-metabolism-kg-pipeline)
+- [Lessons from a reference glucose metabolism KG pipeline](#lessons-from-a-reference-glucose-metabolism-kg-pipeline)
 - [Architecture diagram checklist](#architecture-diagram-checklist)
 - [Decisions made during April 5 architecture review](#decisions-made-during-april-5-architecture-review)
 
@@ -366,7 +366,7 @@ If the answer says "BRCA1 has 744 pathogenic variants," the user can click throu
 
 ## Schema: where it lives
 
-The BioLink schema is a shared artifact that lives at the repo root (`schema/biolink_ncbi.yaml`). Both System 1 (for mapping and validation) and System 2 (for graph loading) consume it. It is defined once, before any pipeline code, and updated when new node types or predicates are needed.
+The BioLink schema is a shared artifact that lives at the repository root (`schema/biolink_ncbi.yaml`). Both System 1 (for mapping and validation) and System 2 (for graph loading) consume it. It is defined once, before any pipeline code, and updated when new node types or predicates are needed.
 
 ### Node types (from our 5 databases)
 
@@ -428,7 +428,7 @@ Why first: these three databases have the richest cross-references to each other
 
 | Step | What | Output | Validates |
 |---|---|---|---|
-| 1a | Define shared LinkML schema (node types, edge types, required properties) in `schema/` at repo root | `schema/biolink_ncbi.yaml` | Schema is parseable and BioLink-compliant, importable by both System 1 and System 2 |
+| 1a | Define shared LinkML schema (node types, edge types, required properties) in `schema/` at repository root | `schema/biolink_ncbi.yaml` | Schema is parseable and BioLink-compliant, importable by both System 1 and System 2 |
 | 1b | Gene ETL pipeline: download gene_info, gene2go, gene2pubmed from FTP | Gene KGX (nodes.tsv + edges.tsv) | Gene nodes have NCBIGene: IDs, xrefs include HGNC/OMIM |
 | 1c | ClinVar ETL pipeline: download ClinVarFullRelease.xml from FTP | ClinVar KGX | Variant nodes link to Gene IDs and MedGen CUIs |
 | 1d | MedGen ETL pipeline: download MedGenIDMappings and MGREL from FTP | MedGen KGX | Disease nodes have MONDO IDs (where available) and xrefs |
@@ -475,15 +475,15 @@ Phase 3 instead covers the AGE loader: loading the 5-database merged KGX into Po
 ## What System 1 does NOT do
 
 - Does not load data into the graph database (that's System 2)
-- Does not own the schema alone (schema is shared in `schema/` at repo root, consumed by both System 1 and System 2)
+- Does not own the schema alone (schema is shared in `schema/` at repository root, consumed by both System 1 and System 2)
 - Does not handle user queries (that's System 3)
 - Does not call live APIs (Layer 2/3 are query-time concerns in System 3)
 
-## Repo structure decision
+## Repository structure decision
 
-System 1 can be its own repo. The output is KGX files. System 2 consumes those files. Clean boundary.
+System 1 can be its own repository. The output is KGX files. System 2 consumes those files. Clean boundary.
 
-You could also have System 2 in the same repo under a different folder (the repo structure in the Personal_build_plan.md already does this with `data-pipelines/` and `knowledge-graph/`). Up to you whether it's one monorepo or separate repos. For a portfolio project, one repo is simpler.
+You could also have System 2 in the same repository under a different folder (the repository structure in the Personal_build_plan.md already does this with `data-pipelines/` and `knowledge-graph/`). Up to you whether it's one monorepo or separate repositories. For a portfolio project, one repository is simpler.
 
 ## How System 2 connects
 
@@ -542,7 +542,7 @@ Disk constraint: with 5 databases (dbSNP deferred to System 3 API), the total me
 
 Production runs on the Hetzner CPX42 (~$34/month). The code and KGX files are portable since they are just files on disk.
 
-For portfolio/open source sharing: the code (pipelines, schema, agents) lives in a public GitHub repo regardless of where the data runs. The graph database with 115M nodes is too large to share as a download. The portfolio is the code and architecture, not the running instance.
+For portfolio/open source sharing: the code (pipelines, schema, agents) lives in a public GitHub repository regardless of where the data runs. The graph database with 115M nodes is too large to share as a download. The portfolio is the code and architecture, not the running instance.
 
 ## Validation: how to know System 1 is working
 
@@ -579,7 +579,7 @@ If those return sensible results, System 1 is working. If they return 0 or garba
 - [ ] NCBI API key in .env (already have it)
 - [ ] Python 3.11+ environment
 - [ ] Graph database installed locally (PostgreSQL + Apache AGE)
-- [ ] Clone/init the repo structure
+- [ ] Clone/init the repository structure
 - [ ] LinkML installed (`pip install linkml`) for schema validation
 
 ## Update schedules (how often FTP sources refresh)
@@ -637,13 +637,13 @@ Build these shared utilities during the first pipeline (Gene), then reuse for al
 
 Plan around these. PubMed baseline download is the longest single operation. Run it overnight.
 
-## Lessons from Anne's glucose metabolism KG pipeline
+## Lessons from a reference glucose metabolism KG pipeline
 
-Anne built a working BioLink-compliant KG pipeline for glucose metabolism (82,517 nodes, 263,408 edges). Code is at `NIH/KG/Use-case-WG/PoC/Pipeline/`. Her 9-step pipeline follows the same pattern as our plan (fetch, parse, map to BioLink, merge, validate, export). Key lessons to adopt:
+A reference project built a working BioLink-compliant KG pipeline for glucose metabolism (82,517 nodes, 263,408 edges). Its code is not published. Its 9-step pipeline follows the same pattern as our plan (fetch, parse, map to BioLink, merge, validate, export). Key lessons to adopt:
 
 ### Adopt directly
 
-1. Validation checklist from her assembly step. Six concrete checks, all must be zero:
+1. Validation checklist from its assembly step. Six concrete checks, all must be zero:
    - Duplicate node IDs: 0
    - Duplicate edges (subject + predicate + object): 0
    - Dangling edge subjects: 0
@@ -651,19 +651,19 @@ Anne built a working BioLink-compliant KG pipeline for glucose metabolism (82,51
    - Add our own: nodes without source_url: 0
    - Add our own: edges without provenance properties: 0
 
-2. Pip-installable package with CLI. Her pipeline is runnable as `glucose-kg build`, `glucose-kg validate`, `glucose-kg info`. Our pipelines should follow the same pattern for each database.
+2. Pip-installable package with CLI. The reference pipeline is runnable as `glucose-kg build`, `glucose-kg validate`, `glucose-kg info`. Our pipelines should follow the same pattern for each database.
 
-3. MONDO OBO as supplementary mapping source. Anne downloads the MONDO OBO file directly for UMLS-to-MONDO mapping, not just relying on MedGen. This catches mappings MedGen might miss.
+3. MONDO OBO as supplementary mapping source. The reference pipeline downloads the MONDO OBO file directly for UMLS-to-MONDO mapping, not just relying on MedGen. This catches mappings MedGen might miss.
 
 ### Adopt in Phase 2
 
-4. MANE v1.5 for protein selection. When Protein enters Phase 2, use MANE Select (one canonical protein per gene) rather than random RefSeq accessions. Anne's approach is the gold standard.
+4. MANE v1.5 for protein selection. When Protein enters Phase 2, use MANE Select (one canonical protein per gene) rather than random RefSeq accessions. The reference pipeline's approach is the gold standard.
 
-5. Reactome pathway integration. Anne added pathway nodes with `participates_in` edges. Consider adding Reactome as a Phase 2 data source for pathway-level queries.
+5. Reactome pathway integration. The reference pipeline added pathway nodes with `participates_in` edges. Consider adding Reactome as a Phase 2 data source for pathway-level queries.
 
 ### Where our plan goes further
 
-| Dimension | Anne's pipeline | Our plan |
+| Dimension | Reference pipeline | Our plan |
 |---|---|---|
 | Scope | Human glucose metabolism (6,709 genes) | All organisms, all databases (94M+ genes) |
 | Literature | None | PubMed (40M articles via gene2pubmed) |

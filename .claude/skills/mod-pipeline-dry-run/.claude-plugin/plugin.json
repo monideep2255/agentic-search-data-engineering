@@ -1,0 +1,7 @@
+{
+  "name": "mod-pipeline-dry-run",
+  "version": "1.0.0",
+  "description": "Before an ETL entry point runs, shows its arguments, the directories it reads and writes, and what each output directory already holds, then asks Proceed or Cancel. Trigger: Auto",
+  "author": { "name": "Monideep Chakraborti" },
+  "types": "./types/index.d.ts"
+}

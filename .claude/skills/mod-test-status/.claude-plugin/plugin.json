@@ -1,0 +1,7 @@
+{
+  "name": "mod-test-status",
+  "version": "1.0.0",
+  "description": "Shows the last pytest result in the status line, whether it was a quick or full run, its age, and whether Python files changed since. Trigger: Auto after a pytest run",
+  "author": { "name": "Monideep Chakraborti" },
+  "types": "./types/index.d.ts"
+}

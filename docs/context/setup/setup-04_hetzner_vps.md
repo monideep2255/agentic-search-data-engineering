@@ -36,7 +36,7 @@ Before you start, you need:
 - The personal computer set up per `setup-03_windows_laptop.md` (Phase 1-3 already done here)
 - The work computer with the merged KGX in `C:/Users/<you>/agentic-search-data-engineering/data/kgx/merged/` (~75-95GB)
 - Git Bash or PowerShell available on the work computer (OpenSSH client ships built-in on Windows 11)
-- The repo cloned and venv active on the work computer, `pytest -q` passes (232 tests)
+- The repository cloned and venv active on the work computer, `pytest -q` passes (232 tests)
 
 ## Part A: provision the Hetzner CPX42
 

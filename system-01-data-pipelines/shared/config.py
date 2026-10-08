@@ -6,7 +6,7 @@ and pass the config instance through the pipeline.
 
 Depends on:
     - python-dotenv (load_dotenv)
-    - .env file at repo root (or environment variables set directly)
+    - .env file at repository root (or environment variables set directly)
 
 Reads:
     - NCBI_EMAIL, NCBI_API_KEY

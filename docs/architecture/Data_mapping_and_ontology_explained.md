@@ -1,6 +1,6 @@
 # Data mapping and ontology explained
 
-A first-principles, A to Z reference for how raw NCBI data becomes a BioLink knowledge graph in this repo. Written so that a smart person who has never touched ontologies can read it once and understand every category, every predicate, and every rule that turns a row of FTP text into a node or edge.
+A first-principles, A to Z reference for how raw NCBI data becomes a BioLink knowledge graph in this repository. Written so that a smart person who has never touched ontologies can read it once and understand every category, every predicate, and every rule that turns a row of FTP text into a node or edge.
 
 The story sentence: NCBI gives us flat tables and XML; we apply a small fixed vocabulary (BioLink) and a small fixed set of identifier rules (CURIEs) to turn those tables into one merged graph where every fact is clickable back to its source.
 
@@ -37,7 +37,7 @@ Why we use it instead of inventing our own:
 - Trust: BioLink predicates have agreed semantics; `causes` is dangerously vague, `gene_associated_with_condition` is not.
 - Tooling: KGX (the file format) and AGE loader expect BioLink-shaped data.
 
-This repo uses 10 categories and 14 predicates total, defined once in [schema/biolink_ncbi.yaml](../../schema/biolink_ncbi.yaml) and enforced in [system-01-data-pipelines/shared/biolink_mapper.py](../../system-01-data-pipelines/shared/biolink_mapper.py) as `VALID_CATEGORIES` and `VALID_PREDICATES`. If a parser tries to emit anything outside those two frozensets, `map_node` or `map_edge` raises `ValueError`. There is no path where bad vocabulary reaches disk.
+This repository uses 10 categories and 14 predicates total, defined once in [schema/biolink_ncbi.yaml](../../schema/biolink_ncbi.yaml) and enforced in [system-01-data-pipelines/shared/biolink_mapper.py](../../system-01-data-pipelines/shared/biolink_mapper.py) as `VALID_CATEGORIES` and `VALID_PREDICATES`. If a parser tries to emit anything outside those two frozensets, `map_node` or `map_edge` raises `ValueError`. There is no path where bad vocabulary reaches disk.
 
 ## The 5-step pipeline pattern
 
@@ -367,7 +367,7 @@ Five independent confirmations that the mapping is correct:
 2. 184 unit and integration tests. They cover parsers, mapper edge cases, merge dedup, stub injection, and round-trip KGX export. Tests live in `tests/` and run on every change.
 3. KGX validate. The KGX library's `validate` command runs over the merged output, independently checking shape (column names, header presence, no nulls in required fields, valid CURIE syntax).
 4. awk verify. A separate shell-level check counts node IDs in nodes.tsv vs subject and object IDs referenced in edges.tsv. The 64K mismatches found during Phase 4.0 traced not to mapping bugs but to quoted multi-line PubMed abstracts confusing line counting. The mapping itself was clean.
-5. Verbatim from reference repo. The category list, predicate list, and per-pipeline rules are copied directly from the reference 9-step BioLink pipeline at `reference-repos/ncbi_ai_agents/KG/pipeline/src/glucose_metabolism_kg/`. We did not invent vocabulary; we adopted a working one.
+5. Verbatim from reference repository. The category list, predicate list, and per-pipeline rules are copied directly from the reference 9-step BioLink pipeline at `reference-repos/ncbi_ai_agents/KG/pipeline/src/glucose_metabolism_kg/`. We did not invent vocabulary; we adopted a working one.
 
 If all five pass, the graph is correct by construction.
 
@@ -376,7 +376,7 @@ If all five pass, the graph is correct by construction.
 | Doc | What it explains |
 |-----|------------------|
 | [docs/architecture/Merge_logic_explained.md](Merge_logic_explained.md) | First-principles walkthrough of the merge, dedup, stub injection |
-| [docs/architecture/Biolink_repos_explained.md](Biolink_repos_explained.md) | Where BioLink and LinkML fit, which upstream repos define the schema |
+| [docs/architecture/Biolink_repos_explained.md](Biolink_repos_explained.md) | Where BioLink and LinkML fit, which upstream repositories define the schema |
 | [docs/architecture/AGE_loader_explained.md](AGE_loader_explained.md) | How the merged KGX gets loaded into PostgreSQL + AGE for openCypher queries |
 | [schema/biolink_ncbi.yaml](../../schema/biolink_ncbi.yaml) | Canonical LinkML schema; the source of truth for vocabulary |
 | [system-01-data-pipelines/shared/merger.py](../../system-01-data-pipelines/shared/merger.py) | The merge implementation, including `_PREFIX_TO_CATEGORY` |

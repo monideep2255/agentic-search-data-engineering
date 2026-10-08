@@ -1,6 +1,6 @@
 # Architecture diagram: NCBI knowledge graph V1
 
-System architecture for the V1 knowledge graph: 5 NCBI ETL pipelines feed a streaming merger that writes a single KGX dataset, the loader pushes that dataset into PostgreSQL 15.17 + Apache AGE 1.5.0 on a Hetzner CPX42 VPS, and System 3 (a separate repo) connects as a Cypher client. Live counts: 115,406,761 nodes, 693,295,991 edges, 11 vertex labels, 14 edge labels.
+System architecture for the V1 knowledge graph: 5 NCBI ETL pipelines feed a streaming merger that writes a single KGX dataset, the loader pushes that dataset into PostgreSQL 15.17 + Apache AGE 1.5.0 on a Hetzner CPX42 VPS, and System 3 (a separate repository) connects as a Cypher client. Live counts: 115,406,761 nodes, 693,295,991 edges, 11 vertex labels, 14 edge labels.
 
 ## Table of contents
 
@@ -22,13 +22,13 @@ flowchart LR
     KGX["Merged KGX<br/>nodes.tsv + edges.tsv<br/>~144 GB"]
     Loader["System 2: age-load<br/>node + edge loaders"]
     AGE["PostgreSQL 15 + AGE 1.5<br/>graph: ncbi_kg<br/>Hetzner CPX42"]
-    S3["System 3: search agent<br/>separate repo"]
+    S3["System 3: search agent<br/>separate repository"]
 
     NCBI --> S1 --> Merge --> KGX --> Loader --> AGE
     S3 -->|Cypher over psycopg2| AGE
 ```
 
-The repo at hand owns everything from NCBI to AGE. System 3 is an external Cypher client and is not built here. See [docs/architecture/Three_layer_data_architecture.md](../architecture/Three_layer_data_architecture.md) for the full layer model.
+The repository at hand owns everything from NCBI to AGE. System 3 is an external Cypher client and is not built here. See [docs/architecture/Three_layer_data_architecture.md](../architecture/Three_layer_data_architecture.md) for the full layer model.
 
 ## 2. System 1: data pipelines (5 ETLs)
 
@@ -137,12 +137,12 @@ Step 8 covers three index passes (added during Gate 3 close-out): functional B-t
 
 ## 5. Query-time data flow (System 3 as client)
 
-System 3 lives in a separate repo and connects to the AGE graph as a read-only Cypher client. Nothing in this repo writes to the graph after the bulk load.
+System 3 lives in a separate repository and connects to the AGE graph as a read-only Cypher client. Nothing in this repository writes to the graph after the bulk load.
 
 ```mermaid
 sequenceDiagram
     participant U as User
-    participant S3 as System 3 (other repo)
+    participant S3 as System 3 (other repository)
     participant PG as PostgreSQL + AGE
     participant Tables as ncbi_kg schema
 
@@ -163,7 +163,7 @@ Performance bands and the three rules of fast Cypher (always specify edge label,
 ```mermaid
 flowchart LR
     subgraph Dev["Local dev (Windows laptop)"]
-        Repo["agentic-search-data-engineering"]
+        Repository["agentic-search-data-engineering"]
         LocalKGX["data/kgx/merged/<br/>144 GB"]
     end
 
@@ -173,11 +173,11 @@ flowchart LR
         Snap["Snapshot ~28 GB<br/>3.5x compression"]
     end
 
-    subgraph S3Repo["System 3 repo"]
+    subgraph S3Repo["System 3 repository"]
         Client["FastAPI + LangGraph + UI<br/>built elsewhere"]
     end
 
-    Repo -->|build pipelines| LocalKGX
+    Repository -->|build pipelines| LocalKGX
     LocalKGX -->|rsync over SSH<br/>~120 sessions, partial+inplace| VPS
     VPS --> SW
     SW -.->|nightly via Hetzner console| Snap

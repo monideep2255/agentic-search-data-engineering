@@ -1,0 +1,9 @@
+{
+  "name": "mod-run-diff",
+  "version": "1.0.0",
+  "description": "After a pipeline or merge run, compares its counts with a pinned baseline (the first run) and flags drops and validation counters that rose, on every run until accepted. Trigger: Auto toast after the run; /rundiff shows the last comparison and baseline date; /rundiff accept replaces the baseline",
+  "author": {
+    "name": "Monideep Chakraborti"
+  },
+  "types": "./types/index.d.ts"
+}

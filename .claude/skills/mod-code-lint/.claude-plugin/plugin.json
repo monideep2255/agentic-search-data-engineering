@@ -1,0 +1,6 @@
+{
+  "name": "mod-code-lint",
+  "version": "1.0.0",
+  "description": "After Python edits under the two system folders, warns with a toast about SQL or Cypher built with string formatting and about logging calls that include secret-like names. Warns only, never blocks. Trigger: Auto",
+  "author": { "name": "Monideep Chakraborti" }
+}

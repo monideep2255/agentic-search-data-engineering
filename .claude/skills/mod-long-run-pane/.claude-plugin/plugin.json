@@ -1,0 +1,7 @@
+{
+  "name": "mod-long-run-pane",
+  "version": "1.0.0",
+  "description": "Runs a pipeline entry point from pyproject.toml and streams elapsed time, the last log lines, and row counters into a pane with a Stop button. Trigger: /longrun <entry point> [args]",
+  "author": { "name": "Monideep Chakraborti" },
+  "types": "./types/index.d.ts"
+}

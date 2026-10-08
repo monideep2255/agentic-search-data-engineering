@@ -40,5 +40,14 @@
       "Grep",
       "Agent"
     ]
-  }
+  },
+  "enabledPlugins": {
+    "claude-security@claude-plugins-official": false,
+    "feature-dev@claude-plugins-official": false
+  },
+  "deniedMcpServers": [
+    {
+      "serverName": "claude.ai Claude Docs"
+    }
+  ]
 }

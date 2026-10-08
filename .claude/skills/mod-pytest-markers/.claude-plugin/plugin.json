@@ -1,0 +1,7 @@
+{
+  "name": "mod-pytest-markers",
+  "version": "1.0.0",
+  "description": "When Docker is not running, adds a marker filter to a bare pytest command so integration and docker tests are skipped, and says the run is partial. Trigger: Auto on a pytest command",
+  "author": { "name": "Monideep Chakraborti" },
+  "types": "./types/index.d.ts"
+}

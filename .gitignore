@@ -60,6 +60,14 @@ neo4j/import/
 # the negation below.
 .claude/*
 !.claude/settings.json
+# Agent mods are hook-capable for the same reason: a plugin folder under
+# .claude/skills/ runs code on session start. Track the mod-* folders so every
+# change to one surfaces as a diff and goes through review. The other skills
+# stay local. The engine regenerates .claude-plugin/types/ on every load.
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/mod-*/
+.claude/skills/mod-*/.claude-plugin/types/
 .codex/
 *.swp
 *.swo
@@ -88,3 +96,31 @@ reference-repos/
 
 # Internal NCBI innovation proposal: kept on the owner's machine, never published.
 docs/context/Innovation_proposal_2026.md
+
+# Secrets: never commit. Added October 4, 2026; keep example files committable.
+.env
+.env.*
+*.env
+!.env.example
+!.env.sample
+!env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+id_rsa*
+id_ed25519*
+credentials.json
+**/credentials/
+client_secret*.json
+secrets.json
+secrets.yaml
+secrets.yml
+secrets.toml
+service-account*.json
+service_account*.json
+token.json
+.netrc
+.pypirc
+.claude/settings.local.json

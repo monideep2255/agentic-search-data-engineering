@@ -104,7 +104,7 @@ Each phase produces code only (parsers, pipeline orchestrators, tests). Each gat
 
 ## End product
 
-When all phases are complete, this repo produces:
+When all phases are complete, this repository produces:
 
 1. 5 ETL pipelines that download NCBI bulk data and output BioLink-compliant KGX files (nodes.tsv + edges.tsv per database)
 2. A merged knowledge graph in PostgreSQL + Apache AGE, deployed on a Hetzner VPS, queryable via openCypher
@@ -146,7 +146,7 @@ Snapshot strategy: V1 locks these cutoffs. Refresh in V2, or earlier if a specif
 - "What is the European allele frequency of rs328?" (System 3: NCBI dbSNP REST API call at query time)
 - "What is the mutation spectrum for HNF1A?" (System 3: NCBI dbSNP REST API call at query time)
 
-This is System 1 + System 2. System 3 (search agent, FastAPI, LangGraph, UI) lives in a separate repo and consumes this graph.
+This is System 1 + System 2. System 3 (search agent, FastAPI, LangGraph, UI) lives in a separate repository and consumes this graph.
 
 ## Timeline estimate
 
@@ -262,7 +262,7 @@ No storage problems at any step. No 500GB volume needed (dbSNP not pre-ingested)
 
 Local (current, post 2026-04-16 migration): all data on the Windows laptop C: drive under the repo-local path `C:/Users/<you>/agentic-search-data-engineering/data/`. Paths are configured in `.env` (see `docs/context/setup/setup-03_windows_laptop.md` for the full setup). FTP cache is kept for re-runs, and KGX files are deleted after rsync to the Hetzner VPS and cloud validation passes.
 
-Prior arrangement (retired 2026-04-16): data was symlinked from the repo to `/export/home/<you>/data/` on the NCBI server. `/export` is a 4.3TB LVM volume shared across ~925 machine users with no quota protection, which made the 51GB footprint a good-citizen concern and exposed the pipeline to silent disk contention. Migrated to laptop to eliminate both risks.
+Prior arrangement (retired 2026-04-16): data was symlinked from the repository to `/export/home/<you>/data/` on the NCBI server. `/export` is a 4.3TB LVM volume shared across ~925 machine users with no quota protection, which made the 51GB footprint a good-citizen concern and exposed the pipeline to silent disk contention. Migrated to laptop to eliminate both risks.
 
 Cloud: PostgreSQL + AGE database on Hetzner VPS (Nuremberg datacenter). This is the production instance that System 3 connects to. Cost: ~€26.39/mo all-in (~$30/mo) (CPX42: 8 vCPU, 16GB RAM, 320GB local disk + IPv4 address + snapshot). No separate volume needed. See DECISIONS.md row 80 for verified post-April-1-2026 Hetzner pricing and the CPX32-downsize deferral rationale.
 
@@ -603,7 +603,7 @@ Built the AGE loader code. 7 modules: connection, schema, node_loader, edge_load
 
 Prerequisites (install before running `/bossman-mode --phase 3.0`):
 
-- Repo cloned and venv active. `pytest -q` passes (184/184 baseline).
+- Repository cloned and venv active. `pytest -q` passes (184/184 baseline).
 - Linux PostgreSQL 15 + AGE reachable from the laptop. AGE does not install natively on Windows. Pick one path:
   - Docker Desktop (recommended): install from https://www.docker.com/products/docker-desktop/, reboot, verify with `docker run --rm apache/age:latest postgres --version`. ~20 min setup. Free for personal use; check Docker Business licensing if your employer has >250 employees or >$10M revenue.
   - WSL2 Ubuntu + native install (fallback): `wsl --install -d Ubuntu` then `apt install postgresql-15` and build AGE from source. ~45-60 min setup. No Docker license question.
@@ -682,7 +682,7 @@ After Gate 3, the knowledge graph is live. The next priority is validating that 
 2. Optimize ETL pipelines: consult NCBI domain experts on data quality, update frequencies, and edge cases the current parsers may miss.
 3. Optimize search experience: what question patterns does System 3 need to handle well? Informs agent logic and Cypher query templates.
 4. Seed golden datasets: curate a set of known-correct query/answer pairs for evaluation. These become the test harness for System 3 development.
-5. Feedback loop: user research findings feed back into pipeline improvements (this repo) and agent design (System 3 repo).
+5. Feedback loop: user research findings feed back into pipeline improvements (this repository) and agent design (System 3 repository).
 
 ## Phase 5: dbSNP (deferred, not part of V1)
 
@@ -777,7 +777,7 @@ All tests use inline fixtures (no separate fixture files). Total: 232 tests, all
 
 | File | Read when |
 |------|-----------|
-| `docs/context/setup/setup-03_windows_laptop.md` | First time setting up the repo on a laptop; migrating from `/export`; verifying `.env` paths |
+| `docs/context/setup/setup-03_windows_laptop.md` | First time setting up the repository on a laptop; migrating from `/export`; verifying `.env` paths |
 | `docs/context/setup/setup-04_hetzner_vps.md` | Provisioning the Hetzner CPX42, SSH key setup from both the personal computer and the work laptop, end-to-end verification before Phase 4.0 |
 | `docs/context/setup/setup-05_rsync_windows.md` | Installing rsync on a locked-down Windows laptop (Scoop + cwRsync), the three Windows gotchas (colon path, cwRsync vs Windows OpenSSH pipe incompatibility, HOME unset), and the final working rsync command for Phase 4.0 |
 | `docs/System_1_data_engineering_plan.md` | Before any pipeline work |
